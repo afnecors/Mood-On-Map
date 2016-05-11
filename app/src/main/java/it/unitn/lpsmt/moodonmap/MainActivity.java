@@ -46,26 +46,36 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
 
-    private GoogleMap mMap;
-    private GoogleApiClient client;
-    private ClusterManager<Place> mClusterManager;
+    private GoogleMap mMap;     // Oggetto mappa
+    private GoogleApiClient client;     // Oggetto per usare le API di google
+    private ClusterManager<Place> mClusterManager;      //Array per avere i cluster di marker
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);     // Metto un FAB
+        fab1.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {        // TODO: definire azione
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
 
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);     // Metto un FAB
+        fab2.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
+            @Override
+            public void onClick(View view) {        // TODO: definire azione
+                Snackbar.make(view, "Replace with your own action (2)", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        // Robe auto-generate da google:
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
@@ -107,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
+    // Quando la mappa è pronta chiama questa (per info vedi commenti sopra):
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;   // oggetto mappa
@@ -241,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         */
 
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));     // imposta lo zoom
     }
 
 
@@ -288,12 +300,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
+    // Fa il cluster dei marker passando latitudine-longitudine, titolo, descrizione e immagine del marker
     public class Place implements ClusterItem {
         private final LatLng mPosition;
         private final String titolo;
         private final String descrizione;
         private final BitmapDescriptor immagine;
 
+        // Costruttore
         public Place(double lat, double lng, String title, String snippet, BitmapDescriptor icon) {
             mPosition = new LatLng(lat, lng);
             titolo = title;
@@ -301,6 +315,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             immagine = icon;
         }
 
+        // Getter vari
         @Override
         public LatLng getPosition() {
             return mPosition;
