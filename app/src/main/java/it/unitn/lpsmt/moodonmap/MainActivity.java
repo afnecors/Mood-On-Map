@@ -64,37 +64,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab3.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
             public void onClick(View view) {        // TODO: definire azione
-                Snackbar.make(view, "Replace with your own action (3)", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
+               
                 Intent iinent= new Intent(getBaseContext(),NewMarkerActivity.class);
                 startActivity(iinent);
 
             }
         });
 
-        // Bottone di sinistra: Miei marker
+        // Bottone di sinistra: Marker vicini
         Button but_sx = (Button) findViewById(R.id.but_sx);
         but_sx.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
             public void onClick(View view) {        // TODO: definire azione
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
 
-                Intent iinent= new Intent(getBaseContext(),MyMarkerActivity.class);
+                Intent iinent= new Intent(getBaseContext(),NearMarkerActivity.class);
                 startActivity(iinent);
             }
         });
 
-        // Bottone di destra: Marker nelle vicinanze
+        // Bottone di destra: I miei Marker
         Button but_dx = (Button) findViewById(R.id.but_dx);
         but_dx.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
             public void onClick(View view) {        // TODO: definire azione
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
 
-                Intent iinent= new Intent(getBaseContext(),NearMarkerActivity.class);
+                Intent iinent= new Intent(getBaseContext(),MyMarkerActivity.class);
                 startActivity(iinent);
             }
         });
