@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Button;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -57,8 +58,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);     // Metto un FAB
-        fab1.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
+        // Nuovo marker
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+        fab3.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
+            @Override
+            public void onClick(View view) {        // TODO: definire azione
+                Snackbar.make(view, "Replace with your own action (3)", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        // Bottone di sinistra: Miei marker
+        Button but_sx = (Button) findViewById(R.id.but_sx);
+        but_sx.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
             public void onClick(View view) {        // TODO: definire azione
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -66,23 +78,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);     // Metto un FAB
-        fab2.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
+        // Bottone di destra: Marker nelle vicinanze
+        Button but_dx = (Button) findViewById(R.id.but_dx);
+        but_dx.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
             public void onClick(View view) {        // TODO: definire azione
-                Snackbar.make(view, "Replace with your own action (2)", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
 
-        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);     // Metto un FAB
-        fab2.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
-            @Override
-            public void onClick(View view) {        // TODO: definire azione
-                Snackbar.make(view, "Replace with your own action (3)", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         // Robe auto-generate da google:
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
