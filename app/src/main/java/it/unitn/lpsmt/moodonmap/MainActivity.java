@@ -155,10 +155,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Abilita i permessi della posizione per Android 6
         enableMyLocation();
-
-
-
-        mMap = googleMap;   // oggetto mappa
+        // Nasconde i bottoni direzione in basso a dx
+        mMap.getUiSettings().setMapToolbarEnabled(false);
 
         String id = null;   // uso futuro
 
