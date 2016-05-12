@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onClusterItemClick(Place item) {
                 Log.d("TAG: ", "SIETE TUTTI GAY PORCO DIO SOFFOCATEVI SULLA MIA CAPPELLA");
-                Intent i = new Intent(mContext, NewMarkerActivity.class);
+                Intent i = new Intent(mContext, ShowInfoMarkerActivity.class);
                 startActivity(i);
                 return false;
             }
