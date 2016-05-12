@@ -75,6 +75,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);     // Metto un FAB
+        fab2.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
+            @Override
+            public void onClick(View view) {        // TODO: definire azione
+                Snackbar.make(view, "Replace with your own action (3)", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
         // Robe auto-generate da google:
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
