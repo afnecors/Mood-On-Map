@@ -36,7 +36,9 @@ import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.HashMap;
 
+import it.unitn.lpsmt.moodonmap.utils.OwnIconRendered;
 import it.unitn.lpsmt.moodonmap.utils.PermissionUtils;
+import it.unitn.lpsmt.moodonmap.utils.Place;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
