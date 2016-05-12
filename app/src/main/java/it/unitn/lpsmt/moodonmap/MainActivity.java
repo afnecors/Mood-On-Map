@@ -1,5 +1,8 @@
 package it.unitn.lpsmt.moodonmap;
 
+import android.location.Criteria;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,12 +31,14 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -45,7 +50,9 @@ import java.io.Console;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+import it.unitn.lpsmt.moodonmap.Place;
+
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;     // Oggetto mappa
     private GoogleApiClient client;     // Oggetto per usare le API di google
@@ -139,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         String id = null;   // uso futuro
 
-        float trans = (float) 0.9;  // trasparenza dei marker
         double[] lat = new double[1024];    // latitudine
         double[] lng = new double[1024];    // longitudine
         LatLng[] user = new LatLng[1024];   // lat e long
@@ -167,14 +173,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
 
         // setto lat e lng
-        for(int i = 0 ; i < 10 ; i++){
+        for (int i = 0; i < 10; i++) {
             lat[i] = seed_lat + 0.001;
             lng[i] = seed_lng + 0.001;
             seed_lat = seed_lat + 0.001;
             seed_lng = seed_lng + 0.001;
         }
 
-        for(int i = 10 ; i < 20 ; i++){
+        for (int i = 10; i < 20; i++) {
             lat[i] = seed_lat + 0.002;
             lng[i] = seed_lng - 0.001;
             seed_lat = seed_lat + 0.001;
@@ -216,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.sad);
 
         // Add cluster items (markers) to the cluster manager.
-        for(int i = 0 ; i < 20 ; i++) {
+        for (int i = 0; i < 20; i++) {
             user[i] = new LatLng(lat[i], lng[i]);
             mClusterManager.addItem(new Place(user[i].latitude, user[i].longitude, title, snippet, icon));
         }
@@ -267,6 +273,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         */
 
+        CameraUpdate center=    // imposto dove posizionare la vista iniziale
+                CameraUpdateFactory.newLatLng(new LatLng(seed_lat, seed_lng));
+
+        mMap.moveCamera(center);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));     // imposta lo zoom
     }
 
@@ -288,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://it.unitn.lpsmt.moodonmap/http/host/path")
 
-               // Uri.parse("android-app://com.example.mattia.googlemapstest/http/host/path")
+                // Uri.parse("android-app://com.example.mattia.googlemapstest/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
     }
@@ -311,41 +321,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
-    }
-
-
-    // Fa il cluster dei marker passando latitudine-longitudine, titolo, descrizione e immagine del marker
-    public class Place implements ClusterItem {
-        private final LatLng mPosition;
-        private final String titolo;
-        private final String descrizione;
-        private final BitmapDescriptor immagine;
-
-        // Costruttore
-        public Place(double lat, double lng, String title, String snippet, BitmapDescriptor icon) {
-            mPosition = new LatLng(lat, lng);
-            titolo = title;
-            descrizione = snippet;
-            immagine = icon;
-        }
-
-        // Getter vari
-        @Override
-        public LatLng getPosition() {
-            return mPosition;
-        }
-
-        public BitmapDescriptor getIcon() {
-            return immagine;
-        }
-
-        public String getSnippet() {
-            return descrizione;
-        }
-
-        public String getTitle() {
-            return titolo;
-        }
     }
 }
 

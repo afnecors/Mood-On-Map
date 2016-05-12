@@ -11,14 +11,14 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 /**
  * Created by Mattia on 08/05/2016.
  */
-class OwnIconRendered extends DefaultClusterRenderer<MainActivity.Place> {
+class OwnIconRendered extends DefaultClusterRenderer<Place> {
 
-    public OwnIconRendered(Context context, GoogleMap map, ClusterManager<MainActivity.Place> clusterManager) {
+    public OwnIconRendered(Context context, GoogleMap map, ClusterManager<Place> clusterManager) {
         super(context, map, clusterManager);
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(MainActivity.Place item, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(Place item, MarkerOptions markerOptions) {
         markerOptions.icon(item.getIcon());
         markerOptions.snippet(item.getSnippet());
         markerOptions.title(item.getTitle());
