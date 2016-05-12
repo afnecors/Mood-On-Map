@@ -19,7 +19,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -33,7 +32,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.HashMap;
@@ -66,6 +64,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {        // TODO: definire azione
                 Snackbar.make(view, "Replace with your own action (3)", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                Intent iinent= new Intent(getBaseContext(),NewMarkerActivity.class);
+                startActivity(iinent);
+
             }
         });
 
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                Intent iinent= new Intent(getBaseContext(),MyMarker.class);
+                Intent iinent= new Intent(getBaseContext(),MyMarkerActivity.class);
                 startActivity(iinent);
             }
         });
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                Intent iinent= new Intent(getBaseContext(),Near.class);
+                Intent iinent= new Intent(getBaseContext(),NearMarkerActivity.class);
                 startActivity(iinent);
             }
         });
@@ -123,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            Intent iinent= new Intent(getBaseContext(),SettingActivity.class);
+            startActivity(iinent);
+
             return true;
         }
 

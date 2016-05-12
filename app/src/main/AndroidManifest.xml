@@ -39,13 +39,23 @@
         </activity>
 
         <activity
-            android:name=".MyMarker"
+            android:name=".MyMarkerActivity"
             android:label="MyMarker"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name=".Near"
+            android:name=".NearMarkerActivity"
             android:label="NearMarker"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".NewMarkerActivity"
+            android:label="NewMarker"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".SettingActivity"
+            android:label="Setting"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data

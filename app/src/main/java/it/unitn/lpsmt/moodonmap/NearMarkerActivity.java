@@ -6,11 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 /**
  * Created by jack on 12/05/2016.
  */
-public class MyMarker extends AppCompatActivity {
+public class NearMarkerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.my_marker);
+        setContentView(R.layout.near_marker_activity);
     }
 }
