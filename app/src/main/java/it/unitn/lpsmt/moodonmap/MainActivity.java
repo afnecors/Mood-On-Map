@@ -82,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {        // TODO: definire azione
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                Intent iinent= new Intent(getBaseContext(),MyMarker.class);
+                startActivity(iinent);
             }
         });
 
@@ -92,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {        // TODO: definire azione
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                Intent iinent= new Intent(getBaseContext(),Near.class);
+                startActivity(iinent);
             }
         });
 
