@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -146,21 +145,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
         // Abilita i permessi della posizione per Android 6
         enableMyLocation();
         // Nasconde i bottoni direzione in basso a dx
         mMap.getUiSettings().setMapToolbarEnabled(false);
-
-        String id = null;   // uso futuro
 
         double[] lat = new double[1024];    // latitudine
         double[] lng = new double[1024];    // longitudine
         LatLng[] user = new LatLng[1024];   // lat e long
         double seed_lat = 46.0500;  // seme per generare latitudini (for testing purposes)
         double seed_lng = 11.1300;  // seme per generare longitudini (for testing purposes)
-
-        float zoom = mMap.getCameraPosition().zoom; // ottengo lo zoom che non si sa mai
 
         mClusterManager = new ClusterManager<Place>(this, mMap); // per clusterizzare i marker
 

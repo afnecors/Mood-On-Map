@@ -22,4 +22,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtDisplay"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+
+
 </android.support.design.widget.CoordinatorLayout>
