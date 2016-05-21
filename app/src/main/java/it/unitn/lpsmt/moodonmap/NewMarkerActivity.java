@@ -1,21 +1,128 @@
 package it.unitn.lpsmt.moodonmap;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Mattia on 27/04/2016.
  */
-public class NewMarkerActivity extends AppCompatActivity {
+public class NewMarkerActivity extends AppCompatActivity implements View.OnClickListener {
+
+    ImageButton sad;
+    ImageButton bored;
+    ImageButton lol;
+    TextView selectedEmoji;
+    TextView city;
+    EditText message;
+    Button buttonSave;
+
+    Double lat;
+    Double lng;
+
+    int rId;
+    Bitmap bm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_marker_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
+        /***************************************/
+        /*  Inizializzazione elementi nell'xml */
+        /***************************************/
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        sad = (ImageButton) findViewById(R.id.sad);
+        bored = (ImageButton) findViewById(R.id.bored);
+        lol = (ImageButton) findViewById(R.id.lol);
+
+        selectedEmoji = (TextView) findViewById(R.id.selectedEmoji);
+        city = (TextView) findViewById(R.id.city);
+
+        message = (EditText) findViewById(R.id.message);
+        buttonSave = (Button) findViewById(R.id.buttonSave);
+
+        // Listener vari
+        sad.setOnClickListener(this);
+        lol.setOnClickListener(this);
+        bored.setOnClickListener(this);
+
+        // Prendo lat e lng dalla mainActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            lat = extras.getDouble("lat");
+            lng = extras.getDouble("lng");
+        }
+
+        // Metto nella textView 'city' la città presa dalla lat-lng
+        Geocoder gcd = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(lat, lng, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert addresses != null;
+        if (addresses.size() > 0)
+            city.setText(addresses.get(0).getLocality());
+
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            // torno alla mainActivity passando emoji e messaggio
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                //intent.putExtra("selectedEmoji", selectedEmoji.getText());
+                intent.putExtra("message", message.getText().toString());
+                intent.putExtra("lat", lat);
+                intent.putExtra("lng", lng);
+                //intent.putExtra("rId", rId);
+                intent.putExtra("bit", bm);
+                startActivity(intent);
+            }
+        });
+    }
+
+    // Metto la faccina selezionata in un campo testo invisibile
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.sad:
+                bm = BitmapFactory.decodeResource(getResources(), R.drawable.sad);
+                break;
+
+            case R.id.lol:
+                bm = BitmapFactory.decodeResource(getResources(), R.drawable.lol);
+                break;
+
+            case R.id.bored:
+                bm = BitmapFactory.decodeResource(getResources(), R.drawable.bored);
+                break;
+
+            default:
+                break;
+        }
+
     }
 }

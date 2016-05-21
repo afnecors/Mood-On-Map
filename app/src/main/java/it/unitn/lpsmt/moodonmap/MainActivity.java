@@ -2,6 +2,9 @@ package it.unitn.lpsmt.moodonmap;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -48,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +65,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {        // TODO: definire azione
                
-                Intent iinent= new Intent(getBaseContext(),NewMarkerActivity.class);
-                startActivity(iinent);
+                Intent intent= new Intent(getBaseContext(),NewMarkerActivity.class);
+                intent.putExtra("lat", mMap.getCameraPosition().target.latitude);
+                intent.putExtra("lng", mMap.getCameraPosition().target.longitude);
+                startActivity(intent);
 
             }
         });
@@ -76,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {        // TODO: definire azione
 
-                Intent iinent= new Intent(getBaseContext(),NearMarkerActivity.class);
-                startActivity(iinent);
+                Intent intent= new Intent(getBaseContext(),NearMarkerActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -87,8 +90,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {        // TODO: definire azione
 
-                Intent iinent= new Intent(getBaseContext(),MyMarkerActivity.class);
-                startActivity(iinent);
+                Intent intent= new Intent(getBaseContext(),MyMarkerActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -248,7 +251,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
         /*  Versione coi marker
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
@@ -277,9 +279,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         CameraUpdate center=    // imposto dove posizionare la vista iniziale
                 CameraUpdateFactory.newLatLng(new LatLng(seed_lat, seed_lng));
-
         mMap.moveCamera(center);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));     // imposta lo zoom
+
+        // Azioni fatte quando torno in MainActivity da un'altra activity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String message = extras.getString("message");
+
+            double newLng = extras.getDouble("lng");
+            double newLat = extras.getDouble("lat");
+            int rId = extras.getInt("rId");
+
+            // Tentativi per mettere il marker con l'emoji:
+
+            /*String selectedEmoji = extras.getString("selectedEmoji"); // Prendo il nome dell'emoji selezionata
+            String draw = "R.drawable."+selectedEmoji; // la concateno a R.drawable.
+            Bitmap bm = BitmapFactory.decodeFile(draw); // trasformo la stringa in una Bitmap....because why not
+            BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromBitmap(bm); // trasformo la bm in una bmDescriptor
+            Log.wtf("Emoji: ", "------------------------- - " + draw);
+            */
+
+            // BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker();
+
+            //Bitmap bitmap = (Bitmap) extras.getParcelableExtra("BitmapImage");
+            Bitmap bm = extras.getParcelable("bm");
+            BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromBitmap(bm);
+
+            //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId);
+
+            Log.wtf("MainrActivity", "---------------------------------------------------------");
+            Log.wtf("Messaggio: ", "------------------------- - " + message);
+            Log.wtf("rId: ", "------------------------- - " + rId);
+            Log.wtf("R.drawable.lol id: ", "------------------------- - " + R.drawable.lol);
+
+            mClusterManager.addItem(new Place(newLat, newLng, message, snippet, selectedIcon));
+        }
     }
 
     @Override
@@ -354,5 +389,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
         }
     }
-
 }
