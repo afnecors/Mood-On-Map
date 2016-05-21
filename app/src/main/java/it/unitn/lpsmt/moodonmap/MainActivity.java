@@ -303,12 +303,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker();
 
             //Bitmap bitmap = (Bitmap) extras.getParcelableExtra("BitmapImage");
-            Bitmap bm = extras.getParcelable("bm");
-            BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromBitmap(bm);
+            //Bitmap bm = extras.getParcelable("bm");
+            //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromBitmap(bm);
 
-            //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId);
+            BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // questo funzia
 
-            Log.wtf("MainrActivity", "---------------------------------------------------------");
+            // debug
+            Log.wtf("MainActivity", "---------------------------------------------------------");
             Log.wtf("Messaggio: ", "------------------------- - " + message);
             Log.wtf("rId: ", "------------------------- - " + rId);
             Log.wtf("R.drawable.lol id: ", "------------------------- - " + R.drawable.lol);

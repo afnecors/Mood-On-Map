@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import it.unitn.lpsmt.moodonmap.utils.Place;
+
 /**
  * Created by Mattia on 27/04/2016.
  */
@@ -58,7 +60,6 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         bored = (ImageButton) findViewById(R.id.bored);
         lol = (ImageButton) findViewById(R.id.lol);
 
-        selectedEmoji = (TextView) findViewById(R.id.selectedEmoji);
         city = (TextView) findViewById(R.id.city);
 
         message = (EditText) findViewById(R.id.message);
@@ -88,36 +89,34 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         if (addresses.size() > 0)
             city.setText(addresses.get(0).getLocality());
 
+        // torno alla mainActivity passando messaggio, lat, lng, e id emoji
         buttonSave.setOnClickListener(new View.OnClickListener() {
-            // torno alla mainActivity passando emoji e messaggio
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                //intent.putExtra("selectedEmoji", selectedEmoji.getText());
                 intent.putExtra("message", message.getText().toString());
                 intent.putExtra("lat", lat);
                 intent.putExtra("lng", lng);
-                //intent.putExtra("rId", rId);
-                intent.putExtra("bit", bm);
+                intent.putExtra("rId", rId);
                 startActivity(intent);
             }
         });
     }
 
-    // Metto la faccina selezionata in un campo testo invisibile
+    // Memorizzo l'id dell'emoji selezionata
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sad:
-                bm = BitmapFactory.decodeResource(getResources(), R.drawable.sad);
+                rId = R.drawable.sad;
                 break;
 
             case R.id.lol:
-                bm = BitmapFactory.decodeResource(getResources(), R.drawable.lol);
+                rId = R.drawable.lol;
                 break;
 
             case R.id.bored:
-                bm = BitmapFactory.decodeResource(getResources(), R.drawable.bored);
+                rId = R.drawable.bored;
                 break;
 
             default:
