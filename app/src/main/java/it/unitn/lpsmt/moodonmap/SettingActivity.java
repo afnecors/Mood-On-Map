@@ -8,10 +8,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import it.unitn.lpsmt.moodonmap.utils.OwnIconRendered;
-import it.unitn.lpsmt.moodonmap.utils.PermissionUtils;
-import it.unitn.lpsmt.moodonmap.utils.Place;
-import it.unitn.lpsmt.moodonmap.utils.ListAdapter;
+import it.unitn.lpsmt.moodonmap.utils.ListSettingAdapter;
 
 /**
  * Created by jack on 12/05/2016.
@@ -36,6 +33,6 @@ public class SettingActivity extends AppCompatActivity {
         context=this;
 
         lv=(ListView) findViewById(R.id.listView);
-        lv.setAdapter(new ListAdapter(this, prgmNameList, prgmImages));
+        lv.setAdapter(new ListSettingAdapter(this, prgmNameList, prgmImages));
     }
 }

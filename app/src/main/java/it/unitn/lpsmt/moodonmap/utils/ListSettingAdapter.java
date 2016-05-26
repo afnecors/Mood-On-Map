@@ -15,13 +15,13 @@ import it.unitn.lpsmt.moodonmap.SettingActivity;
 /**
  * Created by jack on 21/05/2016.
  */
-public class ListAdapter extends BaseAdapter {
+public class ListSettingAdapter extends BaseAdapter {
 
     String [] result;
     Context context;
     int [] imageId;
     private static LayoutInflater inflater=null;
-    public ListAdapter(SettingActivity Activity, String[] prgmNameList, int[] prgmImages) {
+    public ListSettingAdapter(SettingActivity Activity, String[] prgmNameList, int[] prgmImages) {
         // TODO Auto-generated constructor stub
         result=prgmNameList;
         context=Activity;
