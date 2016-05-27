@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -41,7 +42,7 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     Double lat;
     Double lng;
 
-    int rId;
+    int rId = 0;
     Bitmap bm;
 
     @Override
@@ -93,12 +94,18 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                intent.putExtra("message", message.getText().toString());
-                intent.putExtra("lat", lat);
-                intent.putExtra("lng", lng);
-                intent.putExtra("rId", rId);
-                startActivity(intent);
+                if(rId != 0) {
+                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    intent.putExtra("message", message.getText().toString());
+                    intent.putExtra("lat", lat);
+                    intent.putExtra("lng", lng);
+                    intent.putExtra("rId", rId);
+                    startActivity(intent);
+                }
+                else{
+                    Toast toast = Toast.makeText(getApplicationContext(), "Scegli un mooooood", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
     }
@@ -106,22 +113,27 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     // Memorizzo l'id dell'emoji selezionata
     @Override
     public void onClick(View v) {
+        String toastMood = "";
         switch (v.getId()) {
             case R.id.sad:
                 rId = R.drawable.sad;
+                toastMood = "sad";
                 break;
 
             case R.id.lol:
                 rId = R.drawable.lol;
+                toastMood = "lol";
                 break;
 
             case R.id.bored:
                 rId = R.drawable.bored;
+                toastMood = "bored";
                 break;
 
             default:
                 break;
         }
-
+        Toast toast = Toast.makeText(getApplicationContext(), toastMood, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

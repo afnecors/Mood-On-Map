@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +25,9 @@ import android.widget.Button;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,11 +45,13 @@ import it.unitn.lpsmt.moodonmap.utils.OwnIconRendered;
 import it.unitn.lpsmt.moodonmap.utils.PermissionUtils;
 import it.unitn.lpsmt.moodonmap.utils.Place;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;     // Oggetto mappa
     private GoogleApiClient client;     // Oggetto per usare le API di google
     private ClusterManager<Place> mClusterManager;      //Array per avere i cluster di marker
+    private Location mLastLocation;
+    private double myLat, myLng;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
@@ -63,11 +68,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
         fab3.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
-            public void onClick(View view) {        // TODO: definire azione
-               
-                Intent intent= new Intent(getBaseContext(),NewMarkerActivity.class);
-                intent.putExtra("lat", mMap.getCameraPosition().target.latitude);
-                intent.putExtra("lng", mMap.getCameraPosition().target.longitude);
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getBaseContext(), NewMarkerActivity.class);
+                intent.putExtra("lat", myLat);
+                intent.putExtra("lng", myLng);
                 startActivity(intent);
 
             }
@@ -79,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {        // TODO: definire azione
 
-                Intent intent= new Intent(getBaseContext(),NearMarkerActivity.class);
+                Intent intent = new Intent(getBaseContext(), NearMarkerActivity.class);
                 startActivity(intent);
             }
         });
@@ -90,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {        // TODO: definire azione
 
-                Intent intent= new Intent(getBaseContext(),MyMarkerActivity.class);
+                Intent intent = new Intent(getBaseContext(), MyMarkerActivity.class);
                 startActivity(intent);
             }
         });
@@ -104,7 +109,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        client = new GoogleApiClient.Builder(this)
+                .addApi(AppIndex.API)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     @Override
@@ -124,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
-            Intent iinent= new Intent(getBaseContext(),SettingActivity.class);
+            Intent iinent = new Intent(getBaseContext(), SettingActivity.class);
             startActivity(iinent);
 
             return true;
@@ -277,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         */
 
-        CameraUpdate center=    // imposto dove posizionare la vista iniziale
+        CameraUpdate center =    // imposto dove posizionare la vista iniziale
                 CameraUpdateFactory.newLatLng(new LatLng(seed_lat, seed_lng));
         mMap.moveCamera(center);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));     // imposta lo zoom
@@ -337,6 +347,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Uri.parse("android-app://com.example.mattia.googlemapstest/http/host/path")
         );
+
         AppIndex.AppIndexApi.start(client, viewAction);
     }
 
@@ -389,5 +400,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
         }
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                client);
+        if (mLastLocation != null) {
+            myLat = mLastLocation.getLatitude();
+            myLng = mLastLocation.getLongitude();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

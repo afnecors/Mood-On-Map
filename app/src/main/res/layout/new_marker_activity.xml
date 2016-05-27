@@ -43,23 +43,26 @@
                     android:id="@+id/bored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="-5sp"
+                    android:layout_marginRight="5sp"
+                    android:background="?android:selectableItemBackground"
                     android:src="@drawable/bored" />
 
                 <ImageButton
                     android:id="@+id/lol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="-5sp"
-                    android:layout_marginRight="-5sp"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="5sp"
+                    android:background="?android:selectableItemBackground"
                     android:src="@drawable/lol" />
 
                 <ImageButton
                     android:id="@+id/sad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="-5sp"
-                    android:layout_marginRight="-5sp"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="5sp"
+                    android:background="?android:selectableItemBackground"
                     android:src="@drawable/sad" />
 
             </LinearLayout>
