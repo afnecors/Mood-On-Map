@@ -8,6 +8,8 @@
         android:layout_gravity="center"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
         />
 
     <TextView
@@ -16,11 +18,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:paddingBottom="16dp"/>
 
     <RadioButton android:id="@+id/radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
+        android:paddingRight="16dp"
        />
 
 </LinearLayout>
