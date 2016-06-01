@@ -3,6 +3,7 @@ package it.unitn.lpsmt.moodonmap.utils;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
+import java.io.Serializable;
 
 /**
  * Created by Mattia on 12/05/2016.

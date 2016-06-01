@@ -34,7 +34,6 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     ImageButton sad;
     ImageButton bored;
     ImageButton lol;
-    TextView selectedEmoji;
     TextView city;
     EditText message;
     Button buttonSave;
@@ -43,7 +42,6 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     Double lng;
 
     int rId = 0;
-    Bitmap bm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,21 +86,21 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         }
         assert addresses != null;
         if (addresses.size() > 0)
-            city.setText(addresses.get(0).getLocality());
+            city.setText(addresses.get(0).getLocality() + ": " + addresses.get(0).getAddressLine(0));
+            //city.setText(addresses.get(0).getLocality());
 
         // torno alla mainActivity passando messaggio, lat, lng, e id emoji
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(rId != 0) {
+                if (rId != 0) {
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                     intent.putExtra("message", message.getText().toString());
                     intent.putExtra("lat", lat);
                     intent.putExtra("lng", lng);
                     intent.putExtra("rId", rId);
                     startActivity(intent);
-                }
-                else{
+                } else {
                     Toast toast = Toast.makeText(getApplicationContext(), "Scegli un mooooood", Toast.LENGTH_SHORT);
                     toast.show();
                 }

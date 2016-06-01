@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -39,6 +40,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import it.unitn.lpsmt.moodonmap.utils.OwnIconRendered;
@@ -51,7 +53,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient client;     // Oggetto per usare le API di google
     private ClusterManager<Place> mClusterManager;      //Array per avere i cluster di marker
     private Location mLastLocation;
-    private double myLat, myLng;
+    private double myLat, myLng;    // lat e lng corrente, cioè dove è l'utente
+    LatLng[] user = new LatLng[1024];   // lat e long di tutti gli utenti
+    double[] lat = new double[1024];    // tutte le latitudini degli utenti
+    double[] lng = new double[1024];    // tutte le longitudini degli utenti
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
@@ -85,6 +90,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {        // TODO: definire azione
 
                 Intent intent = new Intent(getBaseContext(), NearMarkerActivity.class);
+                intent.putExtra("lat", myLat);
+                intent.putExtra("lng", myLng);
+                //intent.putExtra("cluster", (Parcelable) mClusterManager.getClusterMarkerCollection());
+
+                intent.putExtra("userLat", lat);
+                intent.putExtra("userLng", lng);
+
                 startActivity(intent);
             }
         });
@@ -163,9 +175,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Nasconde i bottoni direzione in basso a dx
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
-        double[] lat = new double[1024];    // latitudine
-        double[] lng = new double[1024];    // longitudine
-        LatLng[] user = new LatLng[1024];   // lat e long
         double seed_lat = 46.0500;  // seme per generare latitudini (for testing purposes)
         double seed_lng = 11.1300;  // seme per generare longitudini (for testing purposes)
 
@@ -240,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (int i = 0; i < 20; i++) {
             user[i] = new LatLng(lat[i], lng[i]);
             mClusterManager.addItem(new Place(user[i].latitude, user[i].longitude, title, snippet, icon));
+            mClusterManager.cluster(); // refresho il cluster
         }
 
         mClusterManager.setRenderer(new OwnIconRendered(this, mMap, mClusterManager));
@@ -324,7 +334,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.wtf("rId: ", "------------------------- - " + rId);
             Log.wtf("R.drawable.lol id: ", "------------------------- - " + R.drawable.lol);
 
-            mClusterManager.addItem(new Place(newLat, newLng, message, snippet, selectedIcon));
+            mClusterManager.addItem(new Place(newLat, newLng, message, snippet, selectedIcon)); // aggiungno nuovo marker al cluster
+            mClusterManager.cluster(); // refresho il cluster
         }
     }
 
