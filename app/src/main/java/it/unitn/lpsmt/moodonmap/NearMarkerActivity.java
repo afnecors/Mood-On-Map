@@ -28,27 +28,14 @@ public class NearMarkerActivity extends AppCompatActivity {
     double myLng;
     double[] userLat = new double[1024];    // tutte le latitudini degli utenti
     double[] userLng = new double[1024];    // tutte le longitudini degli utenti
-    private ClusterManager<Place> mClusterManager;      //Array per avere i cluster di marker
-
-    /*List<ImageButton> emojiList;
-    List<TextView> messageList;
-    List<TextView> distanceList;
-    List<Button> buttonDirectionsList;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.near_marker_activity);
 
-        /*emojiList = new ArrayList<>();
-        messageList = new ArrayList<>();
-        distanceList = new ArrayList<>();
-        buttonDirectionsList = new ArrayList<>();*/
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
         setSupportActionBar(toolbar);
-
-        LinearLayout mLinearLayout = (LinearLayout) findViewById(R.id.mLinearLayout);
 
         // Prendo gli extra passati dalla mainActivity
         Bundle extras = getIntent().getExtras();
@@ -59,29 +46,27 @@ public class NearMarkerActivity extends AppCompatActivity {
             userLng = extras.getDoubleArray("userLng");
         }
 
-        numberOfMarkers = userLat.length;
+        numberOfMarkers = userLat.length;   // non va
 
+        // Definisco degli array di bottoni e textview, in cui ogni elemento rappresenta delle
+        // info dei marker degli altri utenti
         ImageButton[] emojiArray = new ImageButton[numberOfMarkers];
         TextView[] messageArray = new TextView[numberOfMarkers];
         TextView[] distanceArray = new TextView[numberOfMarkers];
         Button[] buttonDirectionsArray = new Button[numberOfMarkers];
 
         RelativeLayout info = (RelativeLayout) findViewById(R.id.info);
-        //LinearLayout dist_mess = (LinearLayout) findViewById(R.id.dist_mess);
-        //LinearLayout dist_mess = new LinearLayout(this);
-        //dist_mess.setOrientation(LinearLayout.VERTICAL);
 
-        //info.addView(dist_mess);
-
-        for (int i = 0; i < 10; i++){
-
-            emojiArray[i] = new ImageButton(this);
+        // Ciclo per creare i bottoni e le textview                                                 Idea:  /*   /=====\     DISTANZA    /=====\    */
+        for (int i = 0; i < 10; i++){                                                                      /*   |EMOJI|                 | --> |    */
+                                                                                                           /*   \=====/     MESSAGGIO   \=====/    */
+            emojiArray[i] = new ImageButton(this);  // Creo i singoli bottoni e le singole tv
             messageArray[i] = new TextView(this);
             distanceArray[i] = new TextView(this);
             buttonDirectionsArray[i] = new Button(this);
 
-            emojiArray[i].setId(i + 0);
-            messageArray[i].setId(i + 500);
+            emojiArray[i].setId(i + 0);     // Imposto gli ID degli elementi...
+            messageArray[i].setId(i + 500);     // ...modi migliori non ne ho trovati per farlo
             distanceArray[i].setId(i + 1000);
             buttonDirectionsArray[i].setId(i + 1500);
 
@@ -91,10 +76,10 @@ public class NearMarkerActivity extends AppCompatActivity {
             RelativeLayout.LayoutParams rlpEmoji = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
-            if(i == 0){
+            if(i == 0){ // se è il primo elemento dell'array lo metto in cima al layout
                 rlpEmoji.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             }
-            else{
+            else{   // altrimenti sotto quello precedente
                 rlpEmoji.addRule(RelativeLayout.BELOW, emojiArray[i].getId() - 1);
             }
             rlpEmoji.addRule(RelativeLayout.ALIGN_PARENT_LEFT);

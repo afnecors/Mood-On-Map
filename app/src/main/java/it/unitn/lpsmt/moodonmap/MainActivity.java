@@ -7,11 +7,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
-<<<<<<< HEAD
+
 import android.os.Parcelable;
-=======
+
 import android.provider.Settings;
->>>>>>> origin/master
+
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
 
                 Intent intent = new Intent(getBaseContext(), NewMarkerActivity.class);
-                intent.putExtra("lat", myLat);
+                intent.putExtra("lat", myLat);      // passo myLat e myLng all'activity chiamata
                 intent.putExtra("lng", myLng);
                 startActivity(intent);
 
@@ -94,9 +94,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {        // TODO: definire azione
 
                 Intent intent = new Intent(getBaseContext(), NearMarkerActivity.class);
-                intent.putExtra("lat", myLat);
+                intent.putExtra("lat", myLat);      // passo myLat e myLng all'activity chiamata
                 intent.putExtra("lng", myLng);
-                //intent.putExtra("cluster", (Parcelable) mClusterManager.getClusterMarkerCollection());
 
                 intent.putExtra("userLat", lat);
                 intent.putExtra("userLng", lng);
