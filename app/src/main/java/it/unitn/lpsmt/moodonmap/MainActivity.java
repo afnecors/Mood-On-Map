@@ -7,7 +7,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.os.Parcelable;
+=======
+import android.provider.Settings;
+>>>>>>> origin/master
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -310,6 +314,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             double newLng = extras.getDouble("lng");
             double newLat = extras.getDouble("lat");
             int rId = extras.getInt("rId");
+
+            final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+            message += " android_id:" + android_id;
 
             // Tentativi per mettere il marker con l'emoji:
 

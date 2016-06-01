@@ -33,6 +33,10 @@
             android:textSize="25dp"
             android:textStyle="bold"
             android:text="Mostra solo:"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
             android:layout_below="@+id/apptoolbar"/>
 
         <ListView
@@ -49,7 +53,11 @@
             android:textSize="25dp"
             android:textStyle="bold"
             android:text="Range in Km:"
-            android:layout_below="@+id/listView"/>
+            android:layout_below="@+id/listView"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"/>
 
         <SeekBar
             android:id="@+id/seekbar"
@@ -57,14 +65,23 @@
             android:layout_height="wrap_content"
             android:max="200"
             android:progress="5"
-            android:layout_below="@+id/range"/>
+            android:layout_below="@+id/range"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"/>
 
         <Button
             android:id="@+id/buttonSave"
+            android:layout_alignParentBottom="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/seekbar"
-            android:text="SALVA" />
+            android:text="SALVA"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="?attr/colorPrimary"
+            android:textColor="@color/white"/>
 
     </RelativeLayout>
 
