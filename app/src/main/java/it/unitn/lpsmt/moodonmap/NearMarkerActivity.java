@@ -1,8 +1,10 @@
 package it.unitn.lpsmt.moodonmap;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -26,8 +28,8 @@ public class NearMarkerActivity extends AppCompatActivity {
     int numberOfMarkers;
     double myLat;
     double myLng;
-    double[] userLat = new double[1024];    // tutte le latitudini degli utenti
-    double[] userLng = new double[1024];    // tutte le longitudini degli utenti
+    double[] usersLat = new double[1024];    // tutte le latitudini degli utenti
+    double[] usersLng = new double[1024];    // tutte le longitudini degli utenti
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +42,36 @@ public class NearMarkerActivity extends AppCompatActivity {
         // Prendo gli extra passati dalla mainActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            myLat = extras.getDouble("lat");
-            myLng = extras.getDouble("lng");
-            userLat = extras.getDoubleArray("userLat");
-            userLng = extras.getDoubleArray("userLng");
+            myLat = extras.getDouble("myLat");
+            myLng = extras.getDouble("myLng");
+
+            //usersLat = extras.getDoubleArray("usersLat");
+            //usersLng = extras.getDoubleArray("usersLng");
+            //Log.wtf("lat.length", " --------- " + usersLat.length);
+            //Log.wtf("lng.length", " --------- " + usersLng.length);
+            numberOfMarkers = extras.getInt("numberOfMarkers");
+
+            for(int i = 0; i < numberOfMarkers; i ++){
+                usersLat[i] = extras.getDouble("usersLat" + i);
+                usersLng[i] = extras.getDouble("usersLng" + i);
+            }
         }
 
-        numberOfMarkers = userLat.length;   // non va
+        Location myLocation = new Location("");
+        myLocation.setLatitude(myLat);
+        myLocation.setLongitude(myLng);
+
+        List<Float> distance = new ArrayList<>();
+        //List<Location> usersLocation = new ArrayList<>();
+        Location[] usersLocation = new Location[numberOfMarkers];
+        for (int i = 0; i < numberOfMarkers; i++){
+            Log.wtf("usersLat[i]: ", "------------------------- - " + usersLat[i]);
+            Log.wtf("usersLng[i]: ", "------------------------- - " + usersLng[i]);
+            usersLocation[i] = new Location("");
+            usersLocation[i].setLatitude(usersLat[i]);
+            usersLocation[i].setLongitude(usersLng[i]);
+            distance.add(myLocation.distanceTo(usersLocation[i]));
+        }
 
         // Definisco degli array di bottoni e textview, in cui ogni elemento rappresenta delle
         // info dei marker degli altri utenti
@@ -57,9 +82,15 @@ public class NearMarkerActivity extends AppCompatActivity {
 
         RelativeLayout info = (RelativeLayout) findViewById(R.id.info);
 
-        // Ciclo per creare i bottoni e le textview                                                 Idea:  /*   /=====\     DISTANZA    /=====\    */
-        for (int i = 0; i < 10; i++){                                                                      /*   |EMOJI|                 | --> |    */
-                                                                                                           /*   \=====/     MESSAGGIO   \=====/    */
+        /*** LAYOUT: ***/
+
+        /*   /=====\     DISTANZA    /=====\    */
+        /*   |EMOJI|                 | --> |    */
+        /*   \=====/     MESSAGGIO   \=====/    */
+
+        // Ciclo per creare i bottoni e le textview
+        for (int i = 0; i < numberOfMarkers; i++){
+
             emojiArray[i] = new ImageButton(this);  // Creo i singoli bottoni e le singole tv
             messageArray[i] = new TextView(this);
             distanceArray[i] = new TextView(this);
@@ -104,7 +135,7 @@ public class NearMarkerActivity extends AppCompatActivity {
 
             /************************************************************************/
 
-            distanceArray[i].setText("distanza n: " + i);
+            distanceArray[i].setText("" + distance.get(i));
 
             RelativeLayout.LayoutParams rlpDistance = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,

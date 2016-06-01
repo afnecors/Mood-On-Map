@@ -72,8 +72,8 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         // Prendo lat e lng dalla mainActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            lat = extras.getDouble("lat");
-            lng = extras.getDouble("lng");
+            lat = extras.getDouble("myLat");
+            lng = extras.getDouble("myLng");
         }
 
         // Metto nella textView 'city' la città presa dalla lat-lng

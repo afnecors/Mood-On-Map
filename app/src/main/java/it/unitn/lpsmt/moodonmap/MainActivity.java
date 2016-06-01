@@ -45,7 +45,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import it.unitn.lpsmt.moodonmap.utils.OwnIconRendered;
 import it.unitn.lpsmt.moodonmap.utils.PermissionUtils;
@@ -58,9 +60,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ClusterManager<Place> mClusterManager;      //Array per avere i cluster di marker
     private Location mLastLocation;
     private double myLat, myLng;    // lat e lng corrente, cioè dove è l'utente
-    LatLng[] user = new LatLng[1024];   // lat e long di tutti gli utenti
-    double[] lat = new double[1024];    // tutte le latitudini degli utenti
-    double[] lng = new double[1024];    // tutte le longitudini degli utenti
+    List<LatLng> user = new ArrayList<>();   // lat e long di tutti gli utenti
+    ArrayList<Double> lat = new ArrayList<>();    // tutte le latitudini degli utenti
+    ArrayList<Double> lng = new ArrayList<>();    // tutte le longitudini degli utenti
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
@@ -80,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
 
                 Intent intent = new Intent(getBaseContext(), NewMarkerActivity.class);
-                intent.putExtra("lat", myLat);      // passo myLat e myLng all'activity chiamata
-                intent.putExtra("lng", myLng);
+                intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
+                intent.putExtra("myLng", myLng);
                 startActivity(intent);
 
             }
@@ -94,11 +96,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {        // TODO: definire azione
 
                 Intent intent = new Intent(getBaseContext(), NearMarkerActivity.class);
-                intent.putExtra("lat", myLat);      // passo myLat e myLng all'activity chiamata
-                intent.putExtra("lng", myLng);
+                intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
+                intent.putExtra("myLng", myLng);
 
-                intent.putExtra("userLat", lat);
-                intent.putExtra("userLng", lng);
+                intent.putExtra("numberOfMarkers", lat.size());
+
+                for(int i = 0; i < lat.size(); i++){
+                    /*intent.putExtra("usersLat", lat.toArray());
+                    intent.putExtra("usersLng", lng.toArray());
+                    intent.putExtra("numberOfMarkers", lat.size());
+                    */
+
+                    intent.putExtra("usersLat"+i, lat.get(i));
+                    intent.putExtra("usersLng"+i, lng.get(i));
+                }
 
                 startActivity(intent);
             }
@@ -201,15 +212,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // setto lat e lng
         for (int i = 0; i < 10; i++) {
-            lat[i] = seed_lat + 0.001;
-            lng[i] = seed_lng + 0.001;
+            lat.add(seed_lat + 0.001);
+            lng.add(seed_lng + 0.001);
             seed_lat = seed_lat + 0.001;
             seed_lng = seed_lng + 0.001;
         }
 
         for (int i = 10; i < 20; i++) {
-            lat[i] = seed_lat + 0.002;
-            lng[i] = seed_lng - 0.001;
+            lat.add(seed_lat + 0.002);
+            lng.add(seed_lng - 0.001);
             seed_lat = seed_lat + 0.001;
             seed_lng = seed_lng + 0.001;
         }
@@ -250,8 +261,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Add cluster items (markers) to the cluster manager.
         for (int i = 0; i < 20; i++) {
-            user[i] = new LatLng(lat[i], lng[i]);
-            mClusterManager.addItem(new Place(user[i].latitude, user[i].longitude, title, snippet, icon));
+            user.add(new LatLng(lat.get(i), lng.get(i)));
+            mClusterManager.addItem(new Place(user.get(i).latitude, user.get(i).longitude, title, snippet, icon));
             mClusterManager.cluster(); // refresho il cluster
         }
 
