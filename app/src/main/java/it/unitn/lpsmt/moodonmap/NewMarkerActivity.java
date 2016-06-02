@@ -84,8 +84,9 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         assert addresses != null;
-        if (addresses.size() > 0)
+        if (addresses.size() > 0)   // se il gps non è arrivato a prendere la posizione dell'utente, qui crasha
             city.setText(addresses.get(0).getLocality() + ": " + addresses.get(0).getAddressLine(0));
             //city.setText(addresses.get(0).getLocality());
 
@@ -99,6 +100,7 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
                     intent.putExtra("lat", lat);
                     intent.putExtra("lng", lng);
                     intent.putExtra("rId", rId);
+                    intent.putExtra("activity_id", "NewMarker");
                     startActivity(intent);
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), "Scegli un mooooood", Toast.LENGTH_SHORT);

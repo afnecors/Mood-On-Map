@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 
 import android.os.Parcelable;
+import android.app.ProgressDialog;
 
 import android.provider.Settings;
 
@@ -27,6 +28,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -42,6 +44,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.Serializable;
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Invece di passare tutti i marker passo ogni singoli oggetti che li compongono
                 // perchè è più facile, anche se più lungo
-                for(int i = 0; i < lat.size(); i++){
+                for (int i = 0; i < lat.size(); i++) {
                     intent.putExtra("usersLat" + i, lat.get(i));    // tutte le lat e lng dei marker sulla mappa
                     intent.putExtra("usersLng" + i, lng.get(i));
                     intent.putExtra("usersMsg" + i, title.get(i));  // i messaggi sulla mappa
@@ -262,13 +266,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             snippet.add("snippet");     // chissà se sto snippet un giorno lo useremo...
 
             // per sparpagliare un po' le emoji
-            if(i < 7) {
+            if (i < 7) {
                 icon.add(R.drawable.sad);   // aggiungo l'id dell'emoji all'arraylist
-            }
-            else if(i >= 7 && i < 14){
+            } else if (i >= 7 && i < 14) {
                 icon.add(R.drawable.lol);
-            }
-            else{
+            } else {
                 icon.add(R.drawable.bored);
             }
 
@@ -339,41 +341,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Azioni fatte quando torno in MainActivity da un'altra activity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            String message = extras.getString("message");
+            String activity = extras.getString("activity_id");  // utile per determinare da quale activity vengo
 
-            double newLng = extras.getDouble("lng");
-            double newLat = extras.getDouble("lat");
-            int rId = extras.getInt("rId");
+            String message = extras.getString("message");   // da NewMarkerActivity
+            double newLng = extras.getDouble("lng");    // da NewMarkerActivity
+            double newLat = extras.getDouble("lat");    // da NewMarkerActivity
+            int rId = extras.getInt("rId");     // da NewMarkerActivity
+
+            double selectedLng = extras.getDouble("selectedLng");   // da NearMarkerActivity
+            double selectedLat = extras.getDouble("selectedLat");   // da NearMarkerActivity
 
             final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
             message += " android_id:" + android_id;
 
-            // Tentativi per mettere il marker con l'emoji:
+            switch (activity) {     // guardo da quale activity vengo
 
-            /*String selectedEmoji = extras.getString("selectedEmoji"); // Prendo il nome dell'emoji selezionata
-            String draw = "R.drawable."+selectedEmoji; // la concateno a R.drawable.
-            Bitmap bm = BitmapFactory.decodeFile(draw); // trasformo la stringa in una Bitmap....because why not
-            BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromBitmap(bm); // trasformo la bm in una bmDescriptor
-            Log.wtf("Emoji: ", "------------------------- - " + draw);
-            */
+                case "NewMarker":
+                    BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata
+                    mClusterManager.addItem(new Place(newLat, newLng, message, "snippet", selectedIcon)); // aggiungno nuovo marker al cluster
+                    mClusterManager.cluster(); // refresho il cluster
 
-            // BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker();
+                    CameraUpdate newLatLng =    // imposto la posizione della mappa
+                            CameraUpdateFactory.newLatLng(new LatLng(newLat, newLng));
+                    mMap.moveCamera(newLatLng);
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17));     // imposta lo zoom
 
-            //Bitmap bitmap = (Bitmap) extras.getParcelableExtra("BitmapImage");
-            //Bitmap bm = extras.getParcelable("bm");
-            //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromBitmap(bm);
+                    activity = "";  // resetto l'identificatore di chi ha chiamato l'activity
+                    break;
+                case "NearMarker":
+                    CameraUpdate selectedLatLng =   // imposto la posizione della mappa
+                            CameraUpdateFactory.newLatLng(new LatLng(selectedLat, selectedLng));
+                    mMap.moveCamera(selectedLatLng);
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17));     // imposta lo zoom
 
-            BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // questo funzia
-
-            // debug
-            Log.wtf("MainActivity", "---------------------------------------------------------");
-            Log.wtf("Messaggio: ", "------------------------- - " + message);
-            Log.wtf("rId: ", "------------------------- - " + rId);
-            Log.wtf("R.drawable.lol id: ", "------------------------- - " + R.drawable.lol);
-
-            mClusterManager.addItem(new Place(newLat, newLng, message, "snippet", selectedIcon)); // aggiungno nuovo marker al cluster
-            mClusterManager.cluster(); // refresho il cluster
+                    activity = "";
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

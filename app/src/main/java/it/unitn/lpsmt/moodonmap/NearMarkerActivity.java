@@ -1,5 +1,6 @@
 package it.unitn.lpsmt.moodonmap;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -53,7 +54,7 @@ public class NearMarkerActivity extends AppCompatActivity {
             myLng = extras.getDouble("myLng");
             numberOfMarkers = extras.getInt("numberOfMarkers");
 
-            for(int i = 0; i < numberOfMarkers; i ++){
+            for (int i = 0; i < numberOfMarkers; i++) {
                 usersLat[i] = extras.getDouble("usersLat" + i);
                 usersLng[i] = extras.getDouble("usersLng" + i);
                 usersMsg[i] = extras.getString("usersMsg" + i);
@@ -70,7 +71,7 @@ public class NearMarkerActivity extends AppCompatActivity {
 
         // tutti gli altri marker li salvo in usersLocation, usando tutte le lat e lng
         Location[] usersLocation = new Location[numberOfMarkers];
-        for (int i = 0; i < numberOfMarkers; i++){
+        for (int i = 0; i < numberOfMarkers; i++) {
             usersLocation[i] = new Location("");
             usersLocation[i].setLatitude(usersLat[i]);
             usersLocation[i].setLongitude(usersLng[i]);
@@ -87,6 +88,7 @@ public class NearMarkerActivity extends AppCompatActivity {
         Button[] buttonDirectionsArray = new Button[numberOfMarkers];
 
         RelativeLayout info = (RelativeLayout) findViewById(R.id.info);
+        info.setId(900000 + 1);
 
         /*** IDEA DI LAYOUT DI 'STA ACTIVITY: ***/
 
@@ -95,28 +97,44 @@ public class NearMarkerActivity extends AppCompatActivity {
         /*   \=====/     MESSAGGIO            \=====/    */
 
         // Ciclo per creare i bottoni e le textview
-        for (int i = 0; i < numberOfMarkers; i++){
+        for (int i = 0; i < numberOfMarkers; i++) {
+
+            final int final_i = i;  // per accedere a 'i' dentro le classi interne (tipo onClick)
 
             emojiArray[i] = new ImageButton(this);  // Creo i singoli bottoni e le singole tv
             messageArray[i] = new TextView(this);
             distanceArray[i] = new TextView(this);
             buttonDirectionsArray[i] = new Button(this);
 
-            emojiArray[i].setId(i + 0);     // Imposto gli ID degli elementi...
+            emojiArray[i].setId(i + 1);     // Imposto gli ID degli elementi...
             messageArray[i].setId(i + 500);     // ...modi migliori non ne ho trovati per farlo
-            distanceArray[i].setId(i + 1000);   // perchè gli id devono essere INTEGER e unici
+            distanceArray[i].setId(i + 1000);   // perchè gli id devono essere INTEGER e UNICI
             buttonDirectionsArray[i].setId(i + 1500);
 
             /************************************************************************/
 
             emojiArray[i].setImageResource(usersEmoji[i]);  // setto l'imageButton con l'immagine presa dall'id dell'emoji
 
+            emojiArray[i].setOnClickListener(
+                    new View.OnClickListener() {        // Imposto il suo clicklistener
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                            intent.putExtra("selectedLat", usersLat[final_i]);
+                            intent.putExtra("selectedLng", usersLng[final_i]);
+                            intent.putExtra("activity_id", "NearMarker");
+                            startActivity(intent);
+                        }
+                    }
+            );
+
             // TODO: Tentativo per far diventare l'immagine più grande... ci penserò dopo
             /*emojiArray[i].setMinimumHeight(200);
             emojiArray[i].setMinimumWidth(200);
             emojiArray[i].setPadding(10, 10, 10, 10);
             emojiArray[i].setAdjustViewBounds(true);
-            emojiArray[i].setScaleType(ImageView.ScaleType.FIT_CENTER);*/
+            emojiArray[i].setScaleType(Ima
+            geView.ScaleType.FIT_CENTER);*/
 
             TypedValue outValue = new TypedValue(); // cose per rendere lo sfondo del bottone trasparente
             this.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
@@ -126,10 +144,12 @@ public class NearMarkerActivity extends AppCompatActivity {
             RelativeLayout.LayoutParams rlpEmoji = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
-            if(i == 0){ // se è il primo elemento dell'array lo metto in cima al layout
-                rlpEmoji.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            rlpEmoji.setMargins(15, 0, 0, 0); // sx, su, dx, giù
+
+            if (i == 0) { // se è il primo elemento dell'array lo metto in cima al layout
+                rlpEmoji.addRule(RelativeLayout.ALIGN_TOP, info.getId());
             }
-            else{   // altrimenti sotto quello precedente
+            else {   // altrimenti sotto quello precedente
                 rlpEmoji.addRule(RelativeLayout.BELOW, emojiArray[i].getId() - 1);
             }
             rlpEmoji.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -145,15 +165,10 @@ public class NearMarkerActivity extends AppCompatActivity {
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             rlpMessage.setMargins(15, 17, 0, 0); // sx, su, dx, giù
-            if(i == 0){
-                rlpMessage.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            }
-            else{
-                rlpMessage.addRule(RelativeLayout.BELOW, distanceArray[i].getId() - 1);
-            }
-            rlpMessage.addRule(RelativeLayout.RIGHT_OF, emojiArray[i].getId() + 1);
-            //TODO: se non metto + 1, viene sbagliato il posizionamento del primo elemento
-            //TODO: se lo metto viene sbagliato l'ultimo... boh
+
+            rlpMessage.addRule(RelativeLayout.ALIGN_TOP, emojiArray[i].getId());
+            rlpMessage.addRule(RelativeLayout.RIGHT_OF, emojiArray[i].getId());
+
             messageArray[i].setLayoutParams(rlpMessage);
             (info).addView(messageArray[i]);
 
@@ -165,8 +180,10 @@ public class NearMarkerActivity extends AppCompatActivity {
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             rlpDistance.setMargins(15, 0, 0, 0); // sx, su, dx, giù
+
             rlpDistance.addRule(RelativeLayout.BELOW, messageArray[i].getId());
-            rlpDistance.addRule(RelativeLayout.RIGHT_OF, emojiArray[i].getId() + 1);
+            rlpDistance.addRule(RelativeLayout.RIGHT_OF, emojiArray[i].getId());
+
             distanceArray[i].setLayoutParams(rlpDistance);
             (info).addView(distanceArray[i]);
 
@@ -176,13 +193,10 @@ public class NearMarkerActivity extends AppCompatActivity {
             RelativeLayout.LayoutParams rlpButtonDirections = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
-            if(i == 0){
-                rlpButtonDirections.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            }
-            else{
-                rlpButtonDirections.addRule(RelativeLayout.BELOW, buttonDirectionsArray[i].getId() - 1);
-            }
+
+            rlpButtonDirections.addRule(RelativeLayout.ALIGN_TOP, emojiArray[i].getId());
             rlpButtonDirections.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
             buttonDirectionsArray[i].setLayoutParams(rlpButtonDirections);
             (info).addView(buttonDirectionsArray[i]);
         }
