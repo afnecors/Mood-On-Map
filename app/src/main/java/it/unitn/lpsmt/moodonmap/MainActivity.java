@@ -57,12 +57,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;     // Oggetto mappa
     private GoogleApiClient client;     // Oggetto per usare le API di google
-    private ClusterManager<Place> mClusterManager;      //Array per avere i cluster di marker
-    private Location mLastLocation;
+
     private double myLat, myLng;    // lat e lng corrente, cioè dove è l'utente
     List<LatLng> user = new ArrayList<>();   // lat e long di tutti gli utenti
     ArrayList<Double> lat = new ArrayList<>();    // tutte le latitudini degli utenti
     ArrayList<Double> lng = new ArrayList<>();    // tutte le longitudini degli utenti
+
+    ArrayList<String> title = new ArrayList<>();    // titoli dei marker (AKA: messaggi)
+    ArrayList<String> snippet = new ArrayList<>();  // snippet dei marker (ancora da usare)
+    ArrayList<Integer> icon = new ArrayList<>();    // id degli emoji sui marker
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
@@ -98,17 +101,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent intent = new Intent(getBaseContext(), NearMarkerActivity.class);
                 intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
                 intent.putExtra("myLng", myLng);
+                intent.putExtra("numberOfMarkers", lat.size()); // il numero di markers sulla mappa
 
-                intent.putExtra("numberOfMarkers", lat.size());
-
+                // Invece di passare tutti i marker passo ogni singoli oggetti che li compongono
+                // perchè è più facile, anche se più lungo
                 for(int i = 0; i < lat.size(); i++){
-                    /*intent.putExtra("usersLat", lat.toArray());
-                    intent.putExtra("usersLng", lng.toArray());
-                    intent.putExtra("numberOfMarkers", lat.size());
-                    */
-
-                    intent.putExtra("usersLat"+i, lat.get(i));
-                    intent.putExtra("usersLng"+i, lng.get(i));
+                    intent.putExtra("usersLat" + i, lat.get(i));    // tutte le lat e lng dei marker sulla mappa
+                    intent.putExtra("usersLng" + i, lng.get(i));
+                    intent.putExtra("usersMsg" + i, title.get(i));  // i messaggi sulla mappa
+                    intent.putExtra("usersEmoji" + i, icon.get(i)); // gli id delle emoji
                 }
 
                 startActivity(intent);
@@ -192,10 +193,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         double seed_lat = 46.0500;  // seme per generare latitudini (for testing purposes)
         double seed_lng = 11.1300;  // seme per generare longitudini (for testing purposes)
 
-        mClusterManager = new ClusterManager<Place>(this, mMap); // per clusterizzare i marker
+        ClusterManager<Place> mClusterManager = new ClusterManager<Place>(this, mMap);  // manager dei cluster di marker
 
         //Declare HashMap to store mapping of marker to Activity
-        HashMap<String, String> markerMap = new HashMap<String, String>();
+        HashMap<String, String> markerMap = new HashMap<String, String>();  // per ora inutile
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        mMap.setMyLocationEnabled(true);
+        mMap.setMyLocationEnabled(true);    // altri permessi della posizione, uno dei due sarà inutile?
 
         // setto lat e lng
         for (int i = 0; i < 10; i++) {
@@ -255,14 +256,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // manager.
         mMap.setOnCameraChangeListener(mClusterManager);
 
-        String title = "TITOLO";
-        String snippet = "snippet";
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.sad);
-
         // Add cluster items (markers) to the cluster manager.
         for (int i = 0; i < 20; i++) {
-            user.add(new LatLng(lat.get(i), lng.get(i)));
-            mClusterManager.addItem(new Place(user.get(i).latitude, user.get(i).longitude, title, snippet, icon));
+            title.add("messaggio " + i);    // titolo dei marker (AKA: messaggio)
+            snippet.add("snippet");     // chissà se sto snippet un giorno lo useremo...
+
+            // per sparpagliare un po' le emoji
+            if(i < 7) {
+                icon.add(R.drawable.sad);   // aggiungo l'id dell'emoji all'arraylist
+            }
+            else if(i >= 7 && i < 14){
+                icon.add(R.drawable.lol);
+            }
+            else{
+                icon.add(R.drawable.bored);
+            }
+
+            user.add(new LatLng(lat.get(i), lng.get(i)));   // aggiungo un oggetto LatLng alla lista
+
+            mClusterManager.addItem(    // aggiungo tutti i marker generati al cluster manager
+                    new Place(
+                            user.get(i).latitude,
+                            user.get(i).longitude,
+                            title.get(i),
+                            snippet.get(i),
+                            BitmapDescriptorFactory.fromResource(icon.get(i))   // dall'id dell'emoji genero un oggetto BitmapDescriptor
+                    )
+            );
             mClusterManager.cluster(); // refresho il cluster
         }
 
@@ -352,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.wtf("rId: ", "------------------------- - " + rId);
             Log.wtf("R.drawable.lol id: ", "------------------------- - " + R.drawable.lol);
 
-            mClusterManager.addItem(new Place(newLat, newLng, message, snippet, selectedIcon)); // aggiungno nuovo marker al cluster
+            mClusterManager.addItem(new Place(newLat, newLng, message, "snippet", selectedIcon)); // aggiungno nuovo marker al cluster
             mClusterManager.cluster(); // refresho il cluster
         }
     }
@@ -444,7 +464,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 client);
         if (mLastLocation != null) {
             myLat = mLastLocation.getLatitude();
