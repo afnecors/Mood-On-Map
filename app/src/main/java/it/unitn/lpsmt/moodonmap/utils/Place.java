@@ -1,5 +1,7 @@
 package it.unitn.lpsmt.moodonmap.utils;
 
+import android.graphics.Bitmap;
+
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;

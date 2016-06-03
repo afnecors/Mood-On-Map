@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -358,7 +359,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             switch (activity) {     // guardo da quale activity vengo
 
                 case "NewMarker":
-                    BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata
+                    BitmapDescriptor selectedIcon = resizeMarker(rId, 100, 100); // chiamo il metodo per ridimensionare il nuovo marker
+                    //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata
                     mClusterManager.addItem(new Place(newLat, newLng, message, "snippet", selectedIcon)); // aggiungno nuovo marker al cluster
                     mClusterManager.cluster(); // refresho il cluster
 
@@ -369,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     activity = "";  // resetto l'identificatore di chi ha chiamato l'activity
                     break;
+
                 case "NearMarker":
                     CameraUpdate selectedLatLng =   // imposto la posizione della mappa
                             CameraUpdateFactory.newLatLng(new LatLng(selectedLat, selectedLng));
@@ -377,6 +380,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     activity = "";
                     break;
+
                 default:
                     break;
             }
@@ -486,5 +490,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    // Ridimensiona un marker coi valori specificati, potrebbe servirmi in futuro
+    public BitmapDescriptor resizeMarker(int id_marker, int width, int height){
+
+        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(id_marker);
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap bMarker = Bitmap.createScaledBitmap(b, width, height, false);
+
+        return BitmapDescriptorFactory.fromBitmap(bMarker);
     }
 }
