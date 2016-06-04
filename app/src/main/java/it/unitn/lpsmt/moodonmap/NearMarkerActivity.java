@@ -2,6 +2,8 @@ package it.unitn.lpsmt.moodonmap;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -86,6 +88,7 @@ public class NearMarkerActivity extends AppCompatActivity {
         TextView[] messageArray = new TextView[numberOfMarkers];
         TextView[] distanceArray = new TextView[numberOfMarkers];
         Button[] buttonDirectionsArray = new Button[numberOfMarkers];
+        View[] line = new View[numberOfMarkers];
 
         RelativeLayout info = (RelativeLayout) findViewById(R.id.info);
         info.setId(900000 + 1);
@@ -105,11 +108,13 @@ public class NearMarkerActivity extends AppCompatActivity {
             messageArray[i] = new TextView(this);
             distanceArray[i] = new TextView(this);
             buttonDirectionsArray[i] = new Button(this);
+            line[i] = new View(this);   // linea separatoria
 
             emojiArray[i].setId(i + 1);     // Imposto gli ID degli elementi...
             messageArray[i].setId(i + 500);     // ...modi migliori non ne ho trovati per farlo
             distanceArray[i].setId(i + 1000);   // perchè gli id devono essere INTEGER e UNICI
             buttonDirectionsArray[i].setId(i + 1500);
+            line[i].setId(i + 2000);
 
             /************************************************************************/
 
@@ -128,14 +133,6 @@ public class NearMarkerActivity extends AppCompatActivity {
                     }
             );
 
-            // TODO: Tentativo per far diventare l'immagine più grande... ci penserò dopo
-            /*emojiArray[i].setMinimumHeight(200);
-            emojiArray[i].setMinimumWidth(200);
-            emojiArray[i].setPadding(10, 10, 10, 10);
-            emojiArray[i].setAdjustViewBounds(true);
-            emojiArray[i].setScaleType(Ima
-            geView.ScaleType.FIT_CENTER);*/
-
             TypedValue outValue = new TypedValue(); // cose per rendere lo sfondo del bottone trasparente
             this.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
             emojiArray[i].setBackgroundResource(outValue.resourceId);
@@ -150,42 +147,45 @@ public class NearMarkerActivity extends AppCompatActivity {
                 rlpEmoji.addRule(RelativeLayout.ALIGN_TOP, info.getId());
             }
             else {   // altrimenti sotto quello precedente
-                rlpEmoji.addRule(RelativeLayout.BELOW, emojiArray[i].getId() - 1);
+                rlpEmoji.addRule(RelativeLayout.BELOW, line[i - 1].getId());
             }
             rlpEmoji.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             emojiArray[i].setLayoutParams(rlpEmoji);    // setto i parametri definiti all'elemento
-            (info).addView(emojiArray[i]);  // aggiungo l'elemento alla view
+            info.addView(emojiArray[i]);  // aggiungo l'elemento alla view
 
             // Gli altri elementi sotto funzionano tutti allo stesso modo, quindi evito di commentare
             /************************************************************************/
 
             messageArray[i].setText("" + usersMsg[i]);
+            messageArray[i].setTextSize(20);
+            messageArray[i].setTypeface(null, Typeface.BOLD);
 
             RelativeLayout.LayoutParams rlpMessage = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rlpMessage.setMargins(15, 17, 0, 0); // sx, su, dx, giù
+            rlpMessage.setMargins(15, 10, 0, 0); // sx, su, dx, giù
 
             rlpMessage.addRule(RelativeLayout.ALIGN_TOP, emojiArray[i].getId());
             rlpMessage.addRule(RelativeLayout.RIGHT_OF, emojiArray[i].getId());
 
             messageArray[i].setLayoutParams(rlpMessage);
-            (info).addView(messageArray[i]);
+            info.addView(messageArray[i]);
 
             /************************************************************************/
 
             distanceArray[i].setText(distance.get(i) + " m");
+            messageArray[i].setTypeface(null, Typeface.ITALIC);
 
             RelativeLayout.LayoutParams rlpDistance = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rlpDistance.setMargins(15, 0, 0, 0); // sx, su, dx, giù
+            rlpDistance.setMargins(17, 0, 0, 10); // sx, su, dx, giù
 
             rlpDistance.addRule(RelativeLayout.BELOW, messageArray[i].getId());
             rlpDistance.addRule(RelativeLayout.RIGHT_OF, emojiArray[i].getId());
 
             distanceArray[i].setLayoutParams(rlpDistance);
-            (info).addView(distanceArray[i]);
+            info.addView(distanceArray[i]);
 
             /************************************************************************/
 
@@ -194,11 +194,25 @@ public class NearMarkerActivity extends AppCompatActivity {
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-            rlpButtonDirections.addRule(RelativeLayout.ALIGN_TOP, emojiArray[i].getId());
+            rlpButtonDirections.addRule(RelativeLayout.ALIGN_BOTTOM, emojiArray[i].getId());
             rlpButtonDirections.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
             buttonDirectionsArray[i].setLayoutParams(rlpButtonDirections);
-            (info).addView(buttonDirectionsArray[i]);
+            info.addView(buttonDirectionsArray[i]);
+
+            /************************************************************************/
+
+            RelativeLayout.LayoutParams rlpLine = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    1);
+
+            rlpLine.addRule(RelativeLayout.BELOW, emojiArray[i].getId());
+            //rlpLine.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            rlpLine.setMargins(70, 5, 0, 0);
+            line[i].setBackgroundColor(Color.parseColor("#B3B3B3"));
+
+            line[i].setLayoutParams(rlpLine);
+            info.addView(line[i]);
         }
     }
 }
