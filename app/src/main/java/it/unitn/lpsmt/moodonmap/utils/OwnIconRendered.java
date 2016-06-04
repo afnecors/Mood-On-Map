@@ -20,7 +20,7 @@ public class OwnIconRendered extends DefaultClusterRenderer<Place> {
     protected void onBeforeClusterItemRendered(Place item, MarkerOptions markerOptions) {
         markerOptions.icon(item.getIcon());
         markerOptions.snippet(item.getSnippet());
-        markerOptions.title(item.getTitle());
+        markerOptions.title(item.getMessage());
         super.onBeforeClusterItemRendered(item, markerOptions);
     }
 }

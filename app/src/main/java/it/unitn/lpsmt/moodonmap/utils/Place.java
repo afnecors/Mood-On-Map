@@ -3,6 +3,7 @@ package it.unitn.lpsmt.moodonmap.utils;
 import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 import java.io.Serializable;
@@ -12,17 +13,28 @@ import java.io.Serializable;
  */
 // Fa il cluster dei marker passando latitudine-longitudine, titolo, descrizione e immagine del marker
 public class Place implements ClusterItem {
-    private final LatLng mPosition;
-    private final String titolo;
-    private final String descrizione;
-    private final BitmapDescriptor immagine;
+
+    String id_android;
+    double latitude;
+    double longitude;
+    String message;
+    String snippet;
+    Integer id_emo;
+
+    LatLng mPosition;
+    BitmapDescriptor immagine;
 
     // Costruttore
-    public Place(double lat, double lng, String title, String snippet, BitmapDescriptor icon) {
+    public Place(String device_id, double lat, double lng, String mess, String snippet, Integer icon) {
         mPosition = new LatLng(lat, lng);
-        titolo = title;
-        descrizione = snippet;
-        immagine = icon;
+        immagine = BitmapDescriptorFactory.fromResource(icon);
+
+        latitude = lat;
+        longitude = lng;
+        id_emo = icon;
+        message = mess;
+        snippet = snippet;
+        id_android = device_id;
     }
 
     // Getter vari
@@ -36,10 +48,40 @@ public class Place implements ClusterItem {
     }
 
     public String getSnippet() {
-        return descrizione;
+        return snippet;
     }
 
-    public String getTitle() {
-        return titolo;
+    public String getMessage() {
+        return message;
+    }
+
+
+    // Setter
+    public void setImmagine(BitmapDescriptor immagine) {
+        this.immagine = immagine;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.message = descrizione;
+    }
+
+    public void setMessage(String titolo) {
+        this.message = titolo;
+    }
+
+    public void setmPosition(LatLng mPosition) {
+        this.mPosition = mPosition;
+    }
+
+    @Override
+    public String toString() {
+        String json = "{";
+        json += "\"latitude\": \"" + this.latitude + "\",";
+        json += "\"longitude\": \"" + this.longitude + "\",";
+        json += "\"message\": \"" + this.message + "\",";
+        json += "\"id_emo\": \"" + this.id_emo + "\",";
+        json += "\"id_device\": \"" + this.id_android + "\"";
+        json += "}";
+        return json;
     }
 }

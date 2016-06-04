@@ -279,11 +279,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             mClusterManager.addItem(    // aggiungo tutti i marker generati al cluster manager
                     new Place(
+                            "",
                             user.get(i).latitude,
                             user.get(i).longitude,
                             title.get(i),
                             snippet.get(i),
-                            BitmapDescriptorFactory.fromResource(icon.get(i))   // dall'id dell'emoji genero un oggetto BitmapDescriptor
+                            icon.get(i)   // dall'id dell'emoji genero un oggetto BitmapDescriptor
                     )
             );
             mClusterManager.cluster(); // refresho il cluster
@@ -301,7 +302,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Place>() {
             @Override
             public boolean onClusterItemClick(Place item) {
-                Log.d("TAG: ", "SIETE TUTTI GAY PORCO DIO SOFFOCATEVI SULLA MIA CAPPELLA");
                 Intent i = new Intent(mContext, ShowInfoMarkerActivity.class);
                 startActivity(i);
                 return false;
@@ -359,9 +359,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             switch (activity) {     // guardo da quale activity vengo
 
                 case "NewMarker":
-                    BitmapDescriptor selectedIcon = resizeMarker(rId, 100, 100); // chiamo il metodo per ridimensionare il nuovo marker
+                    //BitmapDescriptor selectedIcon = resizeMarker(rId, 100, 100); // chiamo il metodo per ridimensionare il nuovo marker
                     //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata
-                    mClusterManager.addItem(new Place(newLat, newLng, message, "snippet", selectedIcon)); // aggiungno nuovo marker al cluster
+
+                    mClusterManager.addItem(new Place(android_id,newLat, newLng, message, "snippet", rId)); // aggiungno nuovo marker al cluster
                     mClusterManager.cluster(); // refresho il cluster
 
                     CameraUpdate newLatLng =    // imposto la posizione della mappa

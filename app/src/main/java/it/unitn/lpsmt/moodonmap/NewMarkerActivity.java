@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,11 +20,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import it.unitn.lpsmt.moodonmap.api.VolleyResponseListener;
 import it.unitn.lpsmt.moodonmap.utils.Place;
 
 /**
@@ -37,6 +40,7 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     TextView city;
     EditText message;
     Button buttonSave;
+    VolleyResponseListener listener;
 
     Double lat;
     Double lng;
@@ -101,6 +105,16 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
                     intent.putExtra("lng", lng);
                     intent.putExtra("rId", rId);
                     intent.putExtra("activity_id", "NewMarker");
+
+                    final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+                    Place p = new Place(android_id, lat, lng, message.getText().toString(), "snippet",  rId);
+
+                    //String body = new GsonBuilder().create().toJson(p);
+
+                    Log.wtf("Miao", p.toString());
+
+
                     startActivity(intent);
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), "Scegli un mooooood", Toast.LENGTH_SHORT);
