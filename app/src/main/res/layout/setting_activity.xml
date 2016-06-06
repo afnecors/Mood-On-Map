@@ -69,7 +69,31 @@
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:paddingRight="16dp"
-            android:paddingLeft="16dp"/>
+            android:paddingLeft="16dp"
+           />
+
+        <TextView
+            android:id="@+id/minValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/seekbar"
+            android:layout_alignParentLeft="true"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/maxValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/seekbar"
+            android:layout_alignParentRight="true"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/curentValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekbar"
+            android:gravity="center" />
 
         <Button
             android:id="@+id/buttonSave"
