@@ -31,6 +31,10 @@ import android.net.Uri;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,13 +51,21 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.maps.android.clustering.ClusterManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import it.unitn.lpsmt.moodonmap.api.MySingleton;
+import it.unitn.lpsmt.moodonmap.api.VolleyResponseListener;
 import it.unitn.lpsmt.moodonmap.utils.OwnIconRendered;
 import it.unitn.lpsmt.moodonmap.utils.PermissionUtils;
 import it.unitn.lpsmt.moodonmap.utils.Place;
@@ -74,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
+
+    VolleyResponseListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         double seed_lat = 46.0500;  // seme per generare latitudini (for testing purposes)
         double seed_lng = 11.1300;  // seme per generare longitudini (for testing purposes)
 
-        ClusterManager<Place> mClusterManager = new ClusterManager<Place>(this, mMap);  // manager dei cluster di marker
+        final ClusterManager<Place> mClusterManager = new ClusterManager<Place>(this, mMap);  // manager dei cluster di marker
 
         //Declare HashMap to store mapping of marker to Activity
         HashMap<String, String> markerMap = new HashMap<String, String>();  // per ora inutile
@@ -231,28 +245,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             seed_lng = seed_lng + 0.001;
         }
 
-        /* VERSIONE COI MARKER
-        // Aggiungo dei marker
-        for (int i = 0; i < 5; i++) {
-            user[i] = new LatLng(lat[i], lng[i]);
-            mMap.addMarker(new MarkerOptions().position(user[i])
-                        .title("yolo")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.lol))
-                        .alpha(trans)
-            );
-        }
-
-        // Aggiungo dei marker
-        for(int i = 6 ; i < 10 ; i++) {
-            user[i] = new LatLng(lat[i], lng[i]);
-            mMap.addMarker(new MarkerOptions().position(user[i])
-                            .title("yolo")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.sad))
-                            .alpha(trans)
-            );
-        }
-        */
-
         /****************************/
         /*  Clusterizzo i marker    */
         /****************************/
@@ -262,33 +254,67 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnCameraChangeListener(mClusterManager);
 
         // Add cluster items (markers) to the cluster manager.
-        for (int i = 0; i < 20; i++) {
-            title.add("messaggio " + i);    // titolo dei marker (AKA: messaggio)
-            snippet.add("snippet");     // chissà se sto snippet un giorno lo useremo...
+//        for (int i = 0; i < 20; i++) {
+//            title.add("messaggio " + i);    // titolo dei marker (AKA: messaggio)
+//            snippet.add("snippet");     // chissà se sto snippet un giorno lo useremo...
+//
+//            // per sparpagliare un po' le emoji
+//            if (i < 7) {
+//                icon.add(R.drawable.sad);   // aggiungo l'id dell'emoji all'arraylist
+//            } else if (i >= 7 && i < 14) {
+//                icon.add(R.drawable.lol);
+//            } else {
+//                icon.add(R.drawable.bored);
+//            }
+//
+//            user.add(new LatLng(lat.get(i), lng.get(i)));   // aggiungo un oggetto LatLng alla lista
+//
+//            mClusterManager.addItem(    // aggiungo tutti i marker generati al cluster manager
+//                    new Place(
+//                            "",
+//                            user.get(i).latitude,
+//                            user.get(i).longitude,
+//                            title.get(i),
+//                            snippet.get(i),
+//                            icon.get(i)   // dall'id dell'emoji genero un oggetto BitmapDescriptor
+//                    )
+//            );
+//            mClusterManager.cluster(); // refresho il cluster
+//        }
 
-            // per sparpagliare un po' le emoji
-            if (i < 7) {
-                icon.add(R.drawable.sad);   // aggiungo l'id dell'emoji all'arraylist
-            } else if (i >= 7 && i < 14) {
-                icon.add(R.drawable.lol);
-            } else {
-                icon.add(R.drawable.bored);
+
+        /**
+         * Recupero i dati dal server
+         */
+        listener = new VolleyResponseListener() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jo = null;
+                Gson gson = new Gson();
+                Place p = null;
+
+                // cicla la lista di oggetti json
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        jo = response.getJSONObject(i); // ritorna un singolo oggetto json
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
+                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    p.forcePosition(); // aggiunge la posizione
+
+                    mClusterManager.addItem(p);
+                    mClusterManager.cluster();
+                }
             }
 
-            user.add(new LatLng(lat.get(i), lng.get(i)));   // aggiungo un oggetto LatLng alla lista
-
-            mClusterManager.addItem(    // aggiungo tutti i marker generati al cluster manager
-                    new Place(
-                            "",
-                            user.get(i).latitude,
-                            user.get(i).longitude,
-                            title.get(i),
-                            snippet.get(i),
-                            icon.get(i)   // dall'id dell'emoji genero un oggetto BitmapDescriptor
-                    )
-            );
-            mClusterManager.cluster(); // refresho il cluster
-        }
+            @Override
+            public void onError(String message) {
+                Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
+            }
+        };
+        getData(listener);
 
         mClusterManager.setRenderer(new OwnIconRendered(this, mMap, mClusterManager));
 
@@ -501,5 +527,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bitmap bMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
         return BitmapDescriptorFactory.fromBitmap(bMarker);
+    }
+
+    protected void getData(final VolleyResponseListener listener){
+        String url = "http://afnecors.altervista.org/android2016/api.php/markers";
+        JsonArrayRequest jsObjRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        listener.onResponse(response);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 }
