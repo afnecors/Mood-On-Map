@@ -366,6 +366,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             double selectedLng = extras.getDouble("selectedLng");   // da NearMarkerActivity
             double selectedLat = extras.getDouble("selectedLat");   // da NearMarkerActivity
 
+            int pos = extras.getInt("position");//da settingActivity
+            int range = extras.getInt("range");//da settingActivity
+
             final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
             message += " android_id:" + android_id;
@@ -392,6 +395,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             CameraUpdateFactory.newLatLng(new LatLng(selectedLat, selectedLng));
                     mMap.moveCamera(selectedLatLng);
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(17));     // imposta lo zoom
+
+                    activity = "";
+                    break;
+                case "setting":
+                    Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_LONG).show();
+                    int id_e;
+                    if(pos==0){
+                        id_e=R.drawable.bored;
+                    }else if(pos==1){
+                        id_e=R.drawable.lol;
+                    }else if(pos==2){
+                        id_e=R.drawable.sad;
+                    }
 
                     activity = "";
                     break;

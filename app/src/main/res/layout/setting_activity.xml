@@ -43,7 +43,8 @@
             android:id="@+id/listView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1">
+            android:layout_below="@+id/textView1"
+            android:focusable="false">
         </ListView>
 
         <TextView
@@ -96,7 +97,7 @@
             android:gravity="center" />
 
         <Button
-            android:id="@+id/buttonSave"
+            android:id="@+id/ButtonSave"
             android:layout_alignParentBottom="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
