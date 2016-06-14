@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);    // altri permessi della posizione, uno dei due sarà inutile?
 
         // setto lat e lng
-        for (int i = 0; i < 10; i++) {
+        /*for (int i = 0; i < 10; i++) {
             lat.add(seed_lat + 0.001);
             lng.add(seed_lng + 0.001);
             seed_lat = seed_lat + 0.001;
@@ -244,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             seed_lat = seed_lat + 0.001;
             seed_lng = seed_lng + 0.001;
         }
+        */
 
         /****************************/
         /*  Clusterizzo i marker    */
@@ -300,9 +301,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
+                    Log.wtf("a JSON war exploded: ", jo.toString());    // debug
                     p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
                     p.forceImageFromIdEmo(); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
+
+                    // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
+                    title.add(p.getMessage());
+                    lat.add(p.getPosition().latitude);
+                    lng.add(p.getPosition().longitude);
+                    icon.add(R.drawable.lol);   // per adesso mettiamo che sono tutte lol di default
+
+                    // test per vedere se abbiamo tutti gli stessi id
+                    Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
+                    Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
+                    Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
 
                     mClusterManager.addItem(p);
                     mClusterManager.cluster();
@@ -333,32 +347,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return false;
             }
         });
-
-        /*  Versione coi marker
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Log.d("TAG: ", "SIETE TUTTI GAY PORCO DIO SOFFOCATEVI SULLA MIA CAPPELLA");
-                Intent i = new Intent(mContext, NewMarkerActivity.class);
-                startActivity(i);
-                return false;
-            }
-        });
-        */
-
-        // Muovere la mappa sulla propria posizione.... WIP
-        //1) mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mMap.getCameraPosition()));
-        //2) mMap.moveCamera(CameraUpdateFactory.newLatLng(mMap.getCameraPosition().target));
-        /*3)
-        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-
-                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mMap.getCameraPosition()));
-            }
-        });
-        */
 
         CameraUpdate center =    // imposto dove posizionare la vista iniziale
                 CameraUpdateFactory.newLatLng(new LatLng(seed_lat, seed_lng));

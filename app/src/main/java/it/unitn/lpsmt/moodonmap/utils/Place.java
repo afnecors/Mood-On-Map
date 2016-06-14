@@ -30,8 +30,8 @@ public class Place implements ClusterItem {
 
     // Costruttore
     public Place(String device_id, double lat, double lng, String mess, String snippet, Integer icon) {
-        mPosition = new LatLng(lat, lng);
 
+        mPosition = new LatLng(lat, lng);
 
         //immagine = BitmapDescriptorFactory.fromResource(icon);
 
@@ -99,6 +99,7 @@ public class Place implements ClusterItem {
     public void setmPosition(LatLng mPosition) {
         this.mPosition = mPosition;
     }
+
 
     @Override
     public String toString() {
