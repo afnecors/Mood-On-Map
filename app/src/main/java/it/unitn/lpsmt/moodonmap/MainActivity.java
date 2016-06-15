@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button but_sx = (Button) findViewById(R.id.but_sx);
         but_sx.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
-            public void onClick(View view) {        // TODO: definire azione
+            public void onClick(View view) {
 
                 Intent intent = new Intent(getBaseContext(), NearMarkerActivity.class);
                 intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
@@ -139,9 +139,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button but_dx = (Button) findViewById(R.id.but_dx);
         but_dx.setOnClickListener(new View.OnClickListener() {        // Imposto il suo clicklistener
             @Override
-            public void onClick(View view) {        // TODO: definire azione
+            public void onClick(View view) {
 
                 Intent intent = new Intent(getBaseContext(), MyMarkerActivity.class);
+                intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
+                intent.putExtra("myLng", myLng);
                 startActivity(intent);
             }
         });
@@ -398,6 +400,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     activity = "";
                     break;
+
                 case "setting":
                     Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_LONG).show();
                     int id_e;
@@ -535,6 +538,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected void getData(final VolleyResponseListener listener){
         String url = "http://afnecors.altervista.org/android2016/api.php/markers";
+
         JsonArrayRequest jsObjRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
