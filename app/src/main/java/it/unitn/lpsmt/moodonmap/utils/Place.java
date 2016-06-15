@@ -64,42 +64,82 @@ public class Place implements ClusterItem {
             this.immagine = BitmapDescriptorFactory.fromResource(lol);
     }
 
-    // Getter vari
     @Override
     public LatLng getPosition() {
         return mPosition;
     }
 
-    public BitmapDescriptor getIcon() {
-        return immagine;
+    public int getId() {
+        return id;
     }
 
-    public String getSnippet() {
-        return snippet;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getId_device() {
+        return id_device;
+    }
+
+    public void setId_device(String id_device) {
+        this.id_device = id_device;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getMessage() {
         return message;
     }
 
-
-    // Setter
-    public void setImmagine(BitmapDescriptor immagine) {
-        this.immagine = immagine;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public void setDescrizione(String descrizione) {
-        this.message = descrizione;
+    public String getSnippet() {
+        return snippet;
     }
 
-    public void setMessage(String titolo) {
-        this.message = titolo;
+    public void setSnippet(String snippet) {
+        this.snippet = snippet;
+    }
+
+    public Integer getId_emo() {
+        return id_emo;
+    }
+
+    public void setId_emo(Integer id_emo) {
+        this.id_emo = id_emo;
+    }
+
+    public LatLng getmPosition() {
+        return mPosition;
     }
 
     public void setmPosition(LatLng mPosition) {
         this.mPosition = mPosition;
     }
 
+    public BitmapDescriptor getImmagine() {
+        return immagine;
+    }
+
+    public void setImmagine(BitmapDescriptor immagine) {
+        this.immagine = immagine;
+    }
 
     @Override
     public String toString() {

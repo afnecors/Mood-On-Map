@@ -18,7 +18,7 @@ public class OwnIconRendered extends DefaultClusterRenderer<Place> {
 
     @Override
     protected void onBeforeClusterItemRendered(Place item, MarkerOptions markerOptions) {
-        markerOptions.icon(item.getIcon());
+        markerOptions.icon(item.getImmagine());
         markerOptions.snippet(item.getSnippet());
         markerOptions.title(item.getMessage());
         super.onBeforeClusterItemRendered(item, markerOptions);

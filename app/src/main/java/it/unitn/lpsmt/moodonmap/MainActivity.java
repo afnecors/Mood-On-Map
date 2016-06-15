@@ -311,8 +311,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
                     title.add(p.getMessage());
-                    lat.add(p.getPosition().latitude);
-                    lng.add(p.getPosition().longitude);
+                    lat.add(p.getLatitude());
+                    lng.add(p.getLongitude());
                     icon.add(R.drawable.lol);   // per adesso mettiamo che sono tutte lol di default
 
                     // test per vedere se abbiamo tutti gli stessi id

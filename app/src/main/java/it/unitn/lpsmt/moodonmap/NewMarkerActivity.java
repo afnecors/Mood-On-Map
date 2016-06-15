@@ -18,14 +18,24 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONArray;
+
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import it.unitn.lpsmt.moodonmap.api.MySingleton;
 import it.unitn.lpsmt.moodonmap.api.VolleyResponseListener;
 import it.unitn.lpsmt.moodonmap.utils.Place;
 
@@ -108,12 +118,14 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
 
                     final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                    Place p = new Place(android_id, lat, lng, message.getText().toString(), "snippet",  rId);
+                    Place newPlace = new Place(android_id, lat, lng, message.getText().toString(), "snippet",  rId);
 
                     //String body = new GsonBuilder().create().toJson(p);
 
-                    Log.wtf("Miao", p.toString());
+                    Log.wtf("Miao", newPlace.toString());
 
+                    //todo fare la richiesta per salvare il marker sul server
+                    //sendData(newPlace);
 
                     startActivity(intent);
                 } else {
@@ -150,4 +162,43 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         Toast toast = Toast.makeText(getApplicationContext(), toastMood, Toast.LENGTH_SHORT);
         toast.show();
     }
+
+//    protected void sendData(final Place newPlace){
+//        String url = "http://afnecors.altervista.org/android2016/api.php/markers";
+//
+//        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>()
+//                {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        // response
+//                        Log.d("Response", response);
+//                    }
+//                },
+//                new Response.ErrorListener()
+//                {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // error
+//                        Log.d("Error.Response", error.toString());
+//                    }
+//                }
+//        ) {
+//            @Override
+//            protected Map<String, String> getParams()
+//            {
+//                Map<String, String>  params = new HashMap<String, String>();
+//                params.put("id_device", ""+newPlace.getId_device());
+//                params.put("id_emo", ""+newPlace.getId_emo());
+//                params.put("latitude", ""+newPlace.getLatitude());
+//                params.put("longitude", ""+newPlace.getLongitude());
+//                params.put("message", ""+newPlace.getMessage());
+//
+//                return params;
+//            }
+//        };
+//
+//        // Access the RequestQueue through your singleton class.
+//        MySingleton.getInstance(this).addToRequestQueue(postRequest);
+//    }
 }
