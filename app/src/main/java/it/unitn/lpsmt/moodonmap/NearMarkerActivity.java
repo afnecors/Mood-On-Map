@@ -93,11 +93,11 @@ public class NearMarkerActivity extends AppCompatActivity {
         RelativeLayout info = (RelativeLayout) findViewById(R.id.info);
         info.setId(900000 + 1);
 
-        /*** IDEA DI LAYOUT DI 'STA ACTIVITY: ***/
+        //*** IDEA DI LAYOUT DI 'STA ACTIVITY: ***/
 
-        /*   /=====\     DISTANZA             /=====\    */
-        /*   |EMOJI|                          | --> |    */
-        /*   \=====/     MESSAGGIO            \=====/    */
+        //*   /=====\     DISTANZA             /=====\    */
+        //*   |EMOJI|                          | --> |    */
+        //*   \=====/     MESSAGGIO            \=====/    */
 
         // Ciclo per creare i bottoni e le textview
         for (int i = 0; i < numberOfMarkers; i++) {

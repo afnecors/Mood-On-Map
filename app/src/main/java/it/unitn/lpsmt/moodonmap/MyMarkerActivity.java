@@ -43,6 +43,13 @@ import it.unitn.lpsmt.moodonmap.utils.Place;
  */
 public class MyMarkerActivity extends AppCompatActivity {
 
+    /**
+     * Forse questa activity devo rifarla, è molto pesante e il layout (non so come) viene tutto
+     * sfasato.
+     * L'altro metodo è passare dalla MainActivity direttamente solo i miei marker, e non fare
+     * la chiamata al server (+ controllo se sono miei) qua.
+     */
+
     //Integer[] numberOfMarkers = new Integer[1];    // numero di miei marker, è un problema adesso
     double myLat;   // mia lat attuale
     double myLng;   // mia lng attuale
@@ -55,11 +62,6 @@ public class MyMarkerActivity extends AppCompatActivity {
 
     VolleyResponseListener listener;
 
-    // id del device corrente
-    //private String android_id = Secure.getString(getApplicationContext().getContentResolver(),
-    //        Secure.ANDROID_ID);
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +71,7 @@ public class MyMarkerActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        Log.wtf("ANDRODOWN ID", android_id);
 
         // Prendo gli extra passati dalla mainActivity
         Bundle extras = getIntent().getExtras();
@@ -86,21 +89,18 @@ public class MyMarkerActivity extends AppCompatActivity {
                 JSONObject jo = null;
 
                 // cicla la lista di oggetti json
-
                 for (int i = 0; i < response.length(); i++) {
 
                     try {
                         jo = response.getJSONObject(i); // ritorna un singolo oggetto json
 
-                        //if(android_id.equals(jo.getString("id_device")) && jo.getInt("visible") == 1) {
+                        if(android_id.equals(jo.getString("id_device")) && jo.getInt("visible") == 1) {
                             //numberOfMarkers++;
                             oldTitle.add(jo.getString("message"));
                             oldLat.add(jo.getDouble("latitude"));
                             oldLng.add(jo.getDouble("longitude"));
-                            oldIcon.add(R.drawable.lol); // ...per adesso
-
-                            Log.wtf("Kraken seeking for answers inside", "oldLat.size() returns: " + oldLat.size());
-                        //}
+                            oldIcon.add(jo.getInt("id_emo"));
+                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -136,15 +136,14 @@ public class MyMarkerActivity extends AppCompatActivity {
                 RelativeLayout info = (RelativeLayout) findViewById(R.id.info);
                 info.setId(900000 + 1);
 
-                /*** IDEA DI LAYOUT DI 'STA ACTIVITY: ***/
+                //*** IDEA DI LAYOUT DI 'STA ACTIVITY: ***/
 
-        /*   /=====\     DISTANZA             /=====\    */
-        /*   |EMOJI|                          | --> |    */
-        /*   \=====/     MESSAGGIO            \=====/    */
+                //   /=====\     DISTANZA             /=====\    //
+                //   |EMOJI|                          | --> |    //
+                //   \=====/     MESSAGGIO            \=====/    //
 
                 // Ciclo per creare i bottoni e le textview
                 for (int i = 0; i < oldLat.size(); i++) {
-                    Log.wtf("YOLOSWAGGER", "SUPAMANPOWA");
 
                     final int final_i = i;  // per accedere a 'i' dentro le classi interne (tipo onClick)
 

@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     title.add(p.getMessage());
                     lat.add(p.getLatitude());
                     lng.add(p.getLongitude());
-                    icon.add(R.drawable.lol);   // per adesso mettiamo che sono tutte lol di default
+                    icon.add(p.getId_emo());
 
                     // test per vedere se abbiamo tutti gli stessi id
                     Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
