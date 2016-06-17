@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<LatLng> user = new ArrayList<>();   // lat e long di tutti gli utenti
     ArrayList<Double> lat = new ArrayList<>();    // tutte le latitudini degli utenti
     ArrayList<Double> lng = new ArrayList<>();    // tutte le longitudini degli utenti
-
+    ArrayList<String> id_device = new ArrayList<>(); // tutti gli id dei dispositivi
     ArrayList<String> title = new ArrayList<>();    // titoli dei marker (AKA: messaggi)
     ArrayList<String> snippet = new ArrayList<>();  // snippet dei marker (ancora da usare)
     ArrayList<Integer> icon = new ArrayList<>();    // id degli emoji sui marker
@@ -141,9 +141,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
 
+                final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                //int myMarker_counter = 0;
+
                 Intent intent = new Intent(getBaseContext(), MyMarkerActivity.class);
                 intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
                 intent.putExtra("myLng", myLng);
+                intent.putExtra("numberOfMarkers", lat.size()); // il numero di markers sulla mappa
+                intent.putExtra("android_id", android_id);
+
+                // Invece di passare tutti i marker passo ogni singoli oggetti che li compongono
+                // perchè è più facile, anche se più lungo
+                // Il controllo per vedere se il marker ha l'id del mio device è nell'activity chiamata
+                for (int i = 0; i < lat.size(); i++) {
+                        intent.putExtra("usersLat" + i, lat.get(i));    // tutte le lat e lng dei marker sulla mappa
+                        intent.putExtra("usersLng" + i, lng.get(i));
+                        intent.putExtra("usersMsg" + i, title.get(i));  // i messaggi sulla mappa
+                        intent.putExtra("usersEmoji" + i, icon.get(i)); // gli id delle emoji
+                        intent.putExtra("usersId_device" + i, id_device.get(i));
+                }
+
                 startActivity(intent);
             }
         });
@@ -204,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Quando la mappa è pronta chiama questa (per info vedi commenti sopra):
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
         // Abilita i permessi della posizione per Android 6
@@ -314,6 +332,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     lat.add(p.getLatitude());
                     lng.add(p.getLongitude());
                     icon.add(p.getId_emo());
+                    id_device.add(p.getId_device());
 
                     // test per vedere se abbiamo tutti gli stessi id
                     Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
