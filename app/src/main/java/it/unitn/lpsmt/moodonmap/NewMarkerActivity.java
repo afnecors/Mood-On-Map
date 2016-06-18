@@ -51,6 +51,7 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     EditText message;
     Button buttonSave;
     VolleyResponseListener listener;
+    Place newPlace;
 
     Double lat;
     Double lng;
@@ -118,14 +119,14 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
 
                     final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                    Place newPlace = new Place(android_id, lat, lng, message.getText().toString(), "snippet",  rId);
+                    newPlace = new Place(android_id, lat, lng, message.getText().toString(), "snippet",  rId);
 
                     //String body = new GsonBuilder().create().toJson(p);
 
                     Log.wtf("Miao", newPlace.toString());
 
-                    //todo fare la richiesta per salvare il marker sul server
-                    //sendData(newPlace);
+                    // Invia il marker per il salvataggio sul server
+                    sendData(newPlace);
 
                     startActivity(intent);
                 } else {
@@ -163,42 +164,44 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         toast.show();
     }
 
-//    protected void sendData(final Place newPlace){
-//        String url = "http://afnecors.altervista.org/android2016/api.php/markers";
-//
-//        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-//                new Response.Listener<String>()
-//                {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        // response
-//                        Log.d("Response", response);
-//                    }
-//                },
-//                new Response.ErrorListener()
-//                {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        // error
-//                        Log.d("Error.Response", error.toString());
-//                    }
-//                }
-//        ) {
-//            @Override
-//            protected Map<String, String> getParams()
-//            {
-//                Map<String, String>  params = new HashMap<String, String>();
-//                params.put("id_device", ""+newPlace.getId_device());
-//                params.put("id_emo", ""+newPlace.getId_emo());
-//                params.put("latitude", ""+newPlace.getLatitude());
-//                params.put("longitude", ""+newPlace.getLongitude());
-//                params.put("message", ""+newPlace.getMessage());
-//
-//                return params;
-//            }
-//        };
-//
-//        // Access the RequestQueue through your singleton class.
-//        MySingleton.getInstance(this).addToRequestQueue(postRequest);
-//    }
+    protected void sendData(final Place newPlace){
+        String url = "http://afnecors.altervista.org/android2016/api.php/markers";
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        //todo se ci dovesse essere stato un errore lato backend notificarlo all'utente da qua
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Toast.makeText(NewMarkerActivity.this, "Errore nella richiesta!", Toast.LENGTH_SHORT).show();
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("id_device", ""+newPlace.getId_device());
+                params.put("id_emo", ""+newPlace.getId_emo());
+                params.put("latitude", ""+newPlace.getLatitude());
+                params.put("longitude", ""+newPlace.getLongitude());
+                params.put("message", ""+newPlace.getMessage());
+
+                return params;
+            }
+        };
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(postRequest);
+    }
 }
