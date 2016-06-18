@@ -320,8 +320,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Azioni fatte quando torno in MainActivity da un'altra activity
         Bundle extras = getIntent().getExtras();
+
         if (extras != null) {
             String activity = extras.getString("activity_id");  // utile per determinare da quale activity vengo
+            if (activity == null) // evita il crash
+                activity = "MainActivity";
 
             String message = extras.getString("message");   // da NewMarkerActivity
             double newLng = extras.getDouble("lng");    // da NewMarkerActivity
@@ -339,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             message += " android_id:" + android_id;
 
             switch (activity) {     // guardo da quale activity vengo
-
                 case "NewMarker":
                     //BitmapDescriptor selectedIcon = resizeMarker(rId, 100, 100); // chiamo il metodo per ridimensionare il nuovo marker
                     //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata

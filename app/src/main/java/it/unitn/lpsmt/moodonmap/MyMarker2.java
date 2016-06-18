@@ -62,7 +62,6 @@ public class MyMarker2 extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    Log.wtf("a JSON war exploded: ", jo.toString());    // debug
                     p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
                     p.forceImageFromIdEmo(); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
