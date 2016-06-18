@@ -1,13 +1,18 @@
 package it.unitn.lpsmt.moodonmap.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 
 import it.unitn.lpsmt.moodonmap.R;
 
@@ -139,6 +144,19 @@ public class Place implements ClusterItem {
 
     public void setImmagine(BitmapDescriptor immagine) {
         this.immagine = immagine;
+    }
+
+    public String getAddress(Context context) {
+        Geocoder gcd = new Geocoder(context);
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(this.latitude, this.longitude, 1);
+        } catch (IOException e) {
+            return "";
+        }
+        if (addresses.size() > 0)
+            return addresses.get(0).getAddressLine(0)+" "+addresses.get(0).getLocality();
+        return "";
     }
 
     @Override

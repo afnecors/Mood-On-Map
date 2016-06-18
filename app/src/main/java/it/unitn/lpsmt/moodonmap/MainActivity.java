@@ -2,15 +2,10 @@ package it.unitn.lpsmt.moodonmap;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
-
-import android.os.Parcelable;
-import android.app.ProgressDialog;
 
 import android.provider.Settings;
 
@@ -49,17 +44,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,22 +135,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
                 //int myMarker_counter = 0;
 
-                Intent intent = new Intent(getBaseContext(), MyMarkerActivity.class);
+                Intent intent = new Intent(getBaseContext(), MyMarker2.class);
                 intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
                 intent.putExtra("myLng", myLng);
-                intent.putExtra("numberOfMarkers", lat.size()); // il numero di markers sulla mappa
+                //intent.putExtra("numberOfMarkers", lat.size()); // il numero di markers sulla mappa
                 intent.putExtra("android_id", android_id);
 
                 // Invece di passare tutti i marker passo ogni singoli oggetti che li compongono
                 // perchè è più facile, anche se più lungo
                 // Il controllo per vedere se il marker ha l'id del mio device è nell'activity chiamata
-                for (int i = 0; i < lat.size(); i++) {
-                        intent.putExtra("usersLat" + i, lat.get(i));    // tutte le lat e lng dei marker sulla mappa
-                        intent.putExtra("usersLng" + i, lng.get(i));
-                        intent.putExtra("usersMsg" + i, title.get(i));  // i messaggi sulla mappa
-                        intent.putExtra("usersEmoji" + i, icon.get(i)); // gli id delle emoji
-                        intent.putExtra("usersId_device" + i, id_device.get(i));
-                }
+//                for (int i = 0; i < lat.size(); i++) {
+//                        intent.putExtra("usersLat" + i, lat.get(i));    // tutte le lat e lng dei marker sulla mappa
+//                        intent.putExtra("usersLng" + i, lng.get(i));
+//                        intent.putExtra("usersMsg" + i, title.get(i));  // i messaggi sulla mappa
+//                        intent.putExtra("usersEmoji" + i, icon.get(i)); // gli id delle emoji
+//                        intent.putExtra("usersId_device" + i, id_device.get(i));
+//                }
 
                 startActivity(intent);
             }
@@ -304,54 +295,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
 
 
-        /**
-         * Recupero i dati dal server
-         */
-        listener = new VolleyResponseListener() {
-            @Override
-            public void onResponse(JSONArray response) {
-                JSONObject jo = null;
-                Gson gson = new Gson();
-                Place p = null;
 
-                // cicla la lista di oggetti json
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        jo = response.getJSONObject(i); // ritorna un singolo oggetto json
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    Log.wtf("a JSON war exploded: ", jo.toString());    // debug
-                    p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                    p.forceImageFromIdEmo(); // aggiunge l'immagine
-                    p.forcePosition(); // aggiunge la posizione
-
-                    // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
-                    title.add(p.getMessage());
-                    lat.add(p.getLatitude());
-                    lng.add(p.getLongitude());
-                    icon.add(p.getId_emo());
-                    id_device.add(p.getId_device());
-
-                    // test per vedere se abbiamo tutti gli stessi id
-                    Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
-                    Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
-                    Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
-
-                    mClusterManager.addItem(p);
-                    mClusterManager.cluster();
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
-            }
-        };
-        getData(listener);
-
-        mClusterManager.setRenderer(new OwnIconRendered(this, mMap, mClusterManager));
 
         /***********************************************************/
         /*  Aprire nuova activity quando si clicca su un marker    */
@@ -437,7 +381,57 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 default:
                     break;
             }
+
+
         }
+
+        /**
+         * Recupero i dati dal server
+         */
+        listener = new VolleyResponseListener() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jo = null;
+                Gson gson = new Gson();
+                Place p = null;
+
+                // cicla la lista di oggetti json
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        jo = response.getJSONObject(i); // ritorna un singolo oggetto json
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.wtf("a JSON war exploded: ", jo.toString());    // debug
+                    p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
+                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    p.forcePosition(); // aggiunge la posizione
+
+                    // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
+                    title.add(p.getMessage());
+                    lat.add(p.getLatitude());
+                    lng.add(p.getLongitude());
+                    icon.add(p.getId_emo());
+                    id_device.add(p.getId_device());
+
+                    // test per vedere se abbiamo tutti gli stessi id
+                    Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
+                    Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
+                    Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
+
+                    mClusterManager.addItem(p);
+                    mClusterManager.cluster();
+                }
+                mClusterManager.setRenderer(new OwnIconRendered(MainActivity.this, mMap, mClusterManager));
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
+            }
+        };
+        getData(listener);
     }
 
     @Override
