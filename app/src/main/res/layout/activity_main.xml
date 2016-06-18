@@ -30,7 +30,7 @@
         android:background="@android:color/transparent"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        android:drawableLeft="@android:drawable/ic_menu_edit"
+        android:drawableLeft="@drawable/ic_people_black_24dp"
         />
 
     <android.support.design.widget.FloatingActionButton
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_add" />
+        android:src="@drawable/ic_add_location_white_24dp" />
 
     <Button
         android:id="@+id/but_dx"
@@ -48,7 +48,7 @@
         android:background="@android:color/transparent"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:drawableEnd="@android:drawable/ic_menu_agenda"
+        android:drawableEnd="@drawable/ic_person_black_24dp"
         />
 
 </android.support.design.widget.CoordinatorLayout>
