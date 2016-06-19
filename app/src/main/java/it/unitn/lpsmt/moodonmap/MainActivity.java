@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean mPermissionDenied = false;
 
     VolleyResponseListener listener;
+    VolleyResponseListener setting_listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -368,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 case "setting":
                     Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_LONG).show();
-                    int id_e;
+                    int id_e = 0;
                     if(pos==0){
                         id_e=R.drawable.bored;
                     }else if(pos==1){
@@ -376,6 +377,63 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }else if(pos==2){
                         id_e=R.drawable.sad;
                     }
+
+                    //elimino elementi ne cluster
+                    mClusterManager.clearItems();
+                    mClusterManager.cluster();
+
+                    /**
+                     * Recupero solo i dati che mi interessano dal server
+                     */
+                    final int finalId_e = id_e;
+                    setting_listener = new VolleyResponseListener() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            JSONObject jo = null;
+                            Gson gson = new Gson();
+                            Place p = null;
+
+                            // cicla la lista di oggetti json
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    jo = response.getJSONObject(i); // ritorna un singolo oggetto json
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Log.wtf("a JSON war exploded: ", jo.toString());    // debug
+                                p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
+                                p.forceImageFromIdEmo(); // aggiunge l'immagine
+                                p.forcePosition(); // aggiunge la posizione
+
+                                // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
+                                title.add(p.getMessage());
+                                lat.add(p.getLatitude());
+                                lng.add(p.getLongitude());
+                                icon.add(R.drawable.lol);   // per adesso mettiamo che sono tutte lol di default
+
+                                // test per vedere se abbiamo tutti gli stessi id
+                                Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
+                                Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
+                                Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
+                                if(p.getId_emo()!= finalId_e) {
+                                    mClusterManager.addItem(p);
+                                    mClusterManager.cluster();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
+                        }
+                    };
+
+                    getData(setting_listener);
+
+
+
+
 
                     activity = "";
                     break;

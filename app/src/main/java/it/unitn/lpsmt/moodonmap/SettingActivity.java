@@ -98,7 +98,7 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 intent.putExtra("range", progressChanged);
-                intent.putExtra("position",pos);//pos 0: bored pos 1: happy pos 2: sad
+                intent.putExtra("position",pos);//pos 0: bored pos 1: lol pos 2: sad
                 intent.putExtra("activity_id", "setting");
                 Toast.makeText(context, "You Selected "+pos, Toast.LENGTH_LONG).show();
                 startActivity(intent);
