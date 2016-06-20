@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 p.forceImageFromIdEmo(); // aggiunge l'immagine
                                 p.forcePosition(); // aggiunge la posizione
 
-                                if(p.getId_emo()!=finalId_e){
+                                if(p.getId_emo()==finalId_e){
                                     mClusterManager.addItem(p);
                                     mClusterManager.cluster();
                                 }
