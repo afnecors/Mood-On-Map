@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -387,6 +388,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
 
+//        SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+//        // Setup refresh listener which triggers new data loading
+//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                finish();
+//                startActivity(getIntent());
+//                Toast.makeText(MainActivity.this, "Yeah!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         /**
          * Recupero i dati dal server
          */
