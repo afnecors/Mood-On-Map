@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -80,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean mPermissionDenied = false;
 
     VolleyResponseListener listener;
+    VolleyResponseListener setting_listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             double selectedLat = extras.getDouble("selectedLat");   // da NearMarkerActivity
 
             int pos = extras.getInt("position");//da settingActivity
-            int range = extras.getInt("range");//da settingActivity
+            final int range = extras.getInt("range");//da settingActivity
 
             final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 case "setting":
                     Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_LONG).show();
-                    int id_e;
+                    int id_e = 0;
                     if(pos==0){
                         id_e=R.drawable.bored;
                     }else if(pos==1){
@@ -377,6 +377,76 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }else if(pos==2){
                         id_e=R.drawable.sad;
                     }
+
+
+                    //elimino elementi ne cluster
+                    markerMap.clear();
+                    mMap.clear();
+                    mClusterManager.clearItems();
+                    mClusterManager.cluster();
+                    googleMap.clear();
+
+
+                    /**
+                     * Recupero solo i dati che mi interessano dal server
+                     */
+                    final int finalId_e = id_e;
+                    setting_listener = new VolleyResponseListener() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            JSONObject jo = null;
+                            Gson gson = new Gson();
+                            Place p = null;
+
+                            // Da myLat e myLng creo un oggetto Location per definire dove si trova l'utente
+                            Location myLocation = new Location("");
+                            myLocation.setLatitude(myLat);
+                            myLocation.setLongitude(myLng);
+
+                            List<Integer> distance = new ArrayList<>(); // lista di distanze tra myLocation e tutti gli altri marker
+
+                            // tutti gli altri marker li salvo in usersLocation, usando tutte le lat e lng
+                            Location[] markerLocation = new Location[response.length()];
+
+                            // cicla la lista di oggetti json
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    jo = response.getJSONObject(i); // ritorna un singolo oggetto json
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
+                                p.forceImageFromIdEmo(); // aggiunge l'immagine
+                                p.forcePosition(); // aggiunge la posizione
+
+                                markerLocation[i] = new Location("");
+                                markerLocation[i].setLatitude(p.getLatitude());
+                                markerLocation[i].setLongitude(p.getLongitude());
+                                distance.add((int) myLocation.distanceTo(markerLocation[i])); // calcola la distanza tra myLocation e gli altri marker e la mette in distance
+
+                                if(p.getId_emo()==finalId_e && distance.get(i)<range){
+                                  
+                                        mClusterManager.addItem(p);
+                                        mClusterManager.cluster();
+
+                                }
+
+                            }
+                            mClusterManager.setRenderer(new OwnIconRendered(MainActivity.this, mMap, mClusterManager));
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
+                        }
+                    };
+
+                    getData(setting_listener);
+
+
+
+
 
                     activity = "";
                     break;
@@ -386,65 +456,57 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
 
+        }else{
+            /**
+             * Recupero i dati dal server
+             */
+            listener = new VolleyResponseListener() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    JSONObject jo = null;
+                    Gson gson = new Gson();
+                    Place p = null;
+
+                    // cicla la lista di oggetti json
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            jo = response.getJSONObject(i); // ritorna un singolo oggetto json
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.wtf("a JSON war exploded: ", jo.toString());    // debug
+                        p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
+                        p.forceImageFromIdEmo(); // aggiunge l'immagine
+                        p.forcePosition(); // aggiunge la posizione
+
+                        // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
+                        title.add(p.getMessage());
+                        lat.add(p.getLatitude());
+                        lng.add(p.getLongitude());
+                        icon.add(p.getId_emo());
+                        id_device.add(p.getId_device());
+
+                        // test per vedere se abbiamo tutti gli stessi id
+                        Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
+                        Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
+                        Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
+
+                        mClusterManager.addItem(p);
+                        mClusterManager.cluster();
+                    }
+                    mClusterManager.setRenderer(new OwnIconRendered(MainActivity.this, mMap, mClusterManager));
+                }
+
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
+                }
+            };
+            getData(listener);
         }
 
-//        SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-//        // Setup refresh listener which triggers new data loading
-//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                finish();
-//                startActivity(getIntent());
-//                Toast.makeText(MainActivity.this, "Yeah!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-        /**
-         * Recupero i dati dal server
-         */
-        listener = new VolleyResponseListener() {
-            @Override
-            public void onResponse(JSONArray response) {
-                JSONObject jo = null;
-                Gson gson = new Gson();
-                Place p = null;
 
-                // cicla la lista di oggetti json
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        jo = response.getJSONObject(i); // ritorna un singolo oggetto json
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    Log.wtf("a JSON war exploded: ", jo.toString());    // debug
-                    p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                    p.forceImageFromIdEmo(); // aggiunge l'immagine
-                    p.forcePosition(); // aggiunge la posizione
-
-                    // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
-                    title.add(p.getMessage());
-                    lat.add(p.getLatitude());
-                    lng.add(p.getLongitude());
-                    icon.add(p.getId_emo());
-                    id_device.add(p.getId_device());
-
-                    // test per vedere se abbiamo tutti gli stessi id
-                    Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
-                    Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
-                    Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
-
-                    mClusterManager.addItem(p);
-                    mClusterManager.cluster();
-                }
-                mClusterManager.setRenderer(new OwnIconRendered(MainActivity.this, mMap, mClusterManager));
-            }
-
-            @Override
-            public void onError(String message) {
-                Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
-            }
-        };
-        getData(listener);
     }
 
     @Override

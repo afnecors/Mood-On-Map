@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import it.unitn.lpsmt.moodonmap.R;
 import it.unitn.lpsmt.moodonmap.SettingActivity;
@@ -62,7 +61,7 @@ public class ListSettingAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         Holder holder=new Holder();
         View rowView;
-        rowView = inflater.inflate(R.layout.list_view, null);
+        rowView = inflater.inflate(R.layout.setting_list_view, null);
         holder.tv=(TextView) rowView.findViewById(R.id.textView1);
         holder.img=(ImageView) rowView.findViewById(R.id.imageView1);
         holder.radioBtn=(RadioButton) rowView.findViewById(R.id.radio);
