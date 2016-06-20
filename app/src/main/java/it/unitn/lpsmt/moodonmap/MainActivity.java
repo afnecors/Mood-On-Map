@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             double selectedLat = extras.getDouble("selectedLat");   // da NearMarkerActivity
 
             int pos = extras.getInt("position");//da settingActivity
-            int range = extras.getInt("range");//da settingActivity
+            final int range = extras.getInt("range");//da settingActivity
 
             final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -378,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         id_e=R.drawable.sad;
                     }
 
+
                     //elimino elementi ne cluster
                     markerMap.clear();
                     mMap.clear();
@@ -397,6 +398,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Gson gson = new Gson();
                             Place p = null;
 
+                            // Da myLat e myLng creo un oggetto Location per definire dove si trova l'utente
+                            Location myLocation = new Location("");
+                            myLocation.setLatitude(myLat);
+                            myLocation.setLongitude(myLng);
+
+                            List<Integer> distance = new ArrayList<>(); // lista di distanze tra myLocation e tutti gli altri marker
+
+                            // tutti gli altri marker li salvo in usersLocation, usando tutte le lat e lng
+                            Location[] markerLocation = new Location[response.length()];
+
                             // cicla la lista di oggetti json
                             for (int i = 0; i < response.length(); i++) {
                                 try {
@@ -409,9 +420,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 p.forceImageFromIdEmo(); // aggiunge l'immagine
                                 p.forcePosition(); // aggiunge la posizione
 
-                                if(p.getId_emo()==finalId_e){
-                                    mClusterManager.addItem(p);
-                                    mClusterManager.cluster();
+                                markerLocation[i] = new Location("");
+                                markerLocation[i].setLatitude(p.getLatitude());
+                                markerLocation[i].setLongitude(p.getLongitude());
+                                distance.add((int) myLocation.distanceTo(markerLocation[i])); // calcola la distanza tra myLocation e gli altri marker e la mette in distance
+
+                                if(p.getId_emo()==finalId_e && distance.get(i)<range){
+                                  
+                                        mClusterManager.addItem(p);
+                                        mClusterManager.cluster();
+
                                 }
 
                             }
