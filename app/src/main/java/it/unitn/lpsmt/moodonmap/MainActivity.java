@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     VolleyResponseListener listener;
     VolleyResponseListener setting_listener;
 
+    private ClusterManager<Place> mClusterManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -224,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         double seed_lat = 46.0500;  // seme per generare latitudini (for testing purposes)
         double seed_lng = 11.1300;  // seme per generare longitudini (for testing purposes)
 
-        final ClusterManager<Place> mClusterManager = new ClusterManager<Place>(this, mMap);  // manager dei cluster di marker
+         mClusterManager = new ClusterManager<Place>(this, mMap);  // manager dei cluster di marker
 
         //Declare HashMap to store mapping of marker to Activity
         HashMap<String, String> markerMap = new HashMap<String, String>();  // per ora inutile
@@ -355,6 +357,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.moveCamera(newLatLng);
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(17));     // imposta lo zoom
 
+                    //riempio il cluster in caso sia vuoto per la setting
+                    setMarker();
+
                     activity = "";  // resetto l'identificatore di chi ha chiamato l'activity
                     break;
 
@@ -364,6 +369,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.moveCamera(selectedLatLng);
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(17));     // imposta lo zoom
 
+                    //riempio il cluster in caso sia vuoto per la setting
+                    setMarker();
+                    
                     activity = "";
                     break;
 
@@ -457,53 +465,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         }else{
-            /**
-             * Recupero i dati dal server
-             */
-            listener = new VolleyResponseListener() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    JSONObject jo = null;
-                    Gson gson = new Gson();
-                    Place p = null;
-
-                    // cicla la lista di oggetti json
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            jo = response.getJSONObject(i); // ritorna un singolo oggetto json
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.wtf("a JSON war exploded: ", jo.toString());    // debug
-                        p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                        p.forceImageFromIdEmo(); // aggiunge l'immagine
-                        p.forcePosition(); // aggiunge la posizione
-
-                        // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
-                        title.add(p.getMessage());
-                        lat.add(p.getLatitude());
-                        lng.add(p.getLongitude());
-                        icon.add(p.getId_emo());
-                        id_device.add(p.getId_device());
-
-                        // test per vedere se abbiamo tutti gli stessi id
-                        Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
-                        Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
-                        Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
-
-                        mClusterManager.addItem(p);
-                        mClusterManager.cluster();
-                    }
-                    mClusterManager.setRenderer(new OwnIconRendered(MainActivity.this, mMap, mClusterManager));
-                }
-
-                @Override
-                public void onError(String message) {
-                    Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
-                }
-            };
-            getData(listener);
+            setMarker();
         }
 
 
@@ -645,5 +607,56 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+
+    //mette i marker dal server nel clusterManager
+    public void setMarker(){
+        /**
+         * Recupero i dati dal server
+         */
+        listener = new VolleyResponseListener() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jo = null;
+                Gson gson = new Gson();
+                Place p = null;
+
+                // cicla la lista di oggetti json
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        jo = response.getJSONObject(i); // ritorna un singolo oggetto json
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.wtf("a JSON war exploded: ", jo.toString());    // debug
+                    p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
+                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    p.forcePosition(); // aggiunge la posizione
+
+                    // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
+                    title.add(p.getMessage());
+                    lat.add(p.getLatitude());
+                    lng.add(p.getLongitude());
+                    icon.add(p.getId_emo());
+                    id_device.add(p.getId_device());
+
+                    // test per vedere se abbiamo tutti gli stessi id
+                    Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
+                    Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
+                    Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
+
+                    mClusterManager.addItem(p);
+                    mClusterManager.cluster();
+                }
+                mClusterManager.setRenderer(new OwnIconRendered(MainActivity.this, mMap, mClusterManager));
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
+            }
+        };
+        getData(listener);
     }
 }
