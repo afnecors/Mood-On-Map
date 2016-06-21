@@ -11,21 +11,37 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
+import it.unitn.lpsmt.moodonmap.api.MySingleton;
+import it.unitn.lpsmt.moodonmap.api.VolleyResponseListener;
 import it.unitn.lpsmt.moodonmap.utils.Place;
 
 /**
@@ -33,186 +49,146 @@ import it.unitn.lpsmt.moodonmap.utils.Place;
  */
 public class NearMarkerActivity extends AppCompatActivity {
 
-    int numberOfMarkers;
-    double myLat;
-    double myLng;
-    double[] usersLat = new double[1024];    // tutte le latitudini degli utenti
-    double[] usersLng = new double[1024];    // tutte le longitudini degli utenti
-    String[] usersMsg = new String[1024];   // messaggi
-    Integer[] usersEmoji = new Integer[1024];   // id dell'emoji
+    //double myLat;
+    //double myLng;
+    ArrayList<Double> usersLat = new ArrayList<>();
+    ArrayList<Double> usersLng = new ArrayList<>();
+
+    //final List<Integer> distance = new ArrayList<>(); // lista di distanze tra myLocation e tutti gli altri marker
+    //ArrayList<Location> usersLocation = new ArrayList<>();  // posizione degli altri marker
+    //Location myLocation = new Location("");     // la mia posizione
+
+    VolleyResponseListener listener;
+
+    ArrayList<String> listViewMessage = new ArrayList<>();
+    ArrayList<Integer> listViewImage = new ArrayList<>();
+    ArrayList<String> listViewAddress = new ArrayList<>();
+    //ArrayList<Integer> listViewDistance = new ArrayList<>();
+    List<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.near_marker_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
-        setSupportActionBar(toolbar);
-
         // Prendo gli extra passati dalla mainActivity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            myLat = extras.getDouble("myLat");
-            myLng = extras.getDouble("myLng");
-            numberOfMarkers = extras.getInt("numberOfMarkers");
-
-            for (int i = 0; i < numberOfMarkers; i++) {
-                usersLat[i] = extras.getDouble("usersLat" + i);
-                usersLng[i] = extras.getDouble("usersLng" + i);
-                usersMsg[i] = extras.getString("usersMsg" + i);
-                usersEmoji[i] = extras.getInt("usersEmoji" + i);
-            }
-        }
+        //Bundle extras = getIntent().getExtras();
+        //if (extras != null) {
+        //    myLat = extras.getDouble("myLat");
+        //    myLng = extras.getDouble("myLng");
+        //}
 
         // Da myLat e myLng creo un oggetto Location per definire dove si trova l'utente
-        Location myLocation = new Location("");
-        myLocation.setLatitude(myLat);
-        myLocation.setLongitude(myLng);
+        //myLocation.setLatitude(myLat);
+        //myLocation.setLongitude(myLng);
 
-        List<Integer> distance = new ArrayList<>(); // lista di distanze tra myLocation e tutti gli altri marker
+        listener = new VolleyResponseListener() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jo = null;
+                Gson gson = new Gson();
+                Place p = null;
 
-        // tutti gli altri marker li salvo in usersLocation, usando tutte le lat e lng
-        Location[] usersLocation = new Location[numberOfMarkers];
-        for (int i = 0; i < numberOfMarkers; i++) {
-            usersLocation[i] = new Location("");
-            usersLocation[i].setLatitude(usersLat[i]);
-            usersLocation[i].setLongitude(usersLng[i]);
-            distance.add((int) myLocation.distanceTo(usersLocation[i])); // calcola la distanza tra myLocation e usersLocation[i] e la mette in distance
-        }
-
-        Collections.sort(distance); // ordino la lista secondo le distanze
-
-        // Definisco degli array di bottoni e textview, in cui ogni elemento rappresenta delle
-        // info dei marker degli altri utenti
-        ImageButton[] emojiArray = new ImageButton[numberOfMarkers];
-        TextView[] messageArray = new TextView[numberOfMarkers];
-        TextView[] distanceArray = new TextView[numberOfMarkers];
-        Button[] buttonDirectionsArray = new Button[numberOfMarkers];
-        View[] line = new View[numberOfMarkers];
-
-        RelativeLayout info = (RelativeLayout) findViewById(R.id.info);
-        info.setId(900000 + 1);
-
-        //*** IDEA DI LAYOUT DI 'STA ACTIVITY: ***/
-
-        //*   /=====\     DISTANZA             /=====\    */
-        //*   |EMOJI|                          | --> |    */
-        //*   \=====/     MESSAGGIO            \=====/    */
-
-        // Ciclo per creare i bottoni e le textview
-        for (int i = 0; i < numberOfMarkers; i++) {
-
-            final int final_i = i;  // per accedere a 'i' dentro le classi interne (tipo onClick)
-
-            emojiArray[i] = new ImageButton(this);  // Creo i singoli bottoni e le singole tv
-            messageArray[i] = new TextView(this);
-            distanceArray[i] = new TextView(this);
-            buttonDirectionsArray[i] = new Button(this);
-            line[i] = new View(this);   // linea separatoria
-
-            emojiArray[i].setId(i + 1);     // Imposto gli ID degli elementi...
-            messageArray[i].setId(i + 500);     // ...modi migliori non ne ho trovati per farlo
-            distanceArray[i].setId(i + 1000);   // perchè gli id devono essere INTEGER e UNICI
-            buttonDirectionsArray[i].setId(i + 1500);
-            line[i].setId(i + 2000);
-
-            /************************************************************************/
-
-            emojiArray[i].setImageResource(usersEmoji[i]);  // setto l'imageButton con l'immagine presa dall'id dell'emoji
-
-            emojiArray[i].setOnClickListener(
-                    new View.OnClickListener() {        // Imposto il suo clicklistener
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                            intent.putExtra("selectedLat", usersLat[final_i]);
-                            intent.putExtra("selectedLng", usersLng[final_i]);
-                            intent.putExtra("activity_id", "NearMarker");
-                            startActivity(intent);
-                        }
+                // cicla la lista di oggetti json
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        jo = response.getJSONObject(i); // ritorna un singolo oggetto json
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-            );
 
-            TypedValue outValue = new TypedValue(); // cose per rendere lo sfondo del bottone trasparente
-            this.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-            emojiArray[i].setBackgroundResource(outValue.resourceId);
+                    p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
+                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    p.forcePosition(); // aggiunge la posizione
 
-            // Parametri per posizionare l'elemento in questione nel posto che voglio
-            RelativeLayout.LayoutParams rlpEmoji = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rlpEmoji.setMargins(15, 0, 0, 0); // sx, su, dx, giù
+                    usersLat.add(p.getLatitude());
+                    usersLng.add(p.getLongitude());
 
-            if (i == 0) { // se è il primo elemento dell'array lo metto in cima al layout
-                rlpEmoji.addRule(RelativeLayout.ALIGN_TOP, info.getId());
+                    // uso l'oggetto usersLocation per calcolare le distanze tra me e gli altri
+                    //usersLocation.add(new Location(""));
+                    //usersLocation.get(i).setLatitude(usersLat.get(i));
+                    //usersLocation.get(i).setLongitude(usersLng.get(i));
+                    //distance.add((int) myLocation.distanceTo(usersLocation.get(i))); // calcola la distanza tra myLocation e usersLocation[i] e la mette in distance
+
+                    listViewImage.add(p.getId_emo());
+                    listViewMessage.add(p.getMessage());
+                    listViewAddress.add(p.getAddress(NearMarkerActivity.this));
+                    //listViewDistance.add(distance.get(i));
+                }
+
+                //Collections.sort(listViewDistance); // ordino la lista secondo le distanze
+
+                // Preparo la listview
+                for (int i = 0; i < listViewMessage.size(); i++) {
+                    HashMap<String, String> hm = new HashMap<String, String>();
+                    hm.put("listview_message", listViewMessage.get(i));
+                    hm.put("listview_image", "" + listViewImage.get(i));
+                    hm.put("listview_address", "" + listViewAddress.get(i));
+                    //hm.put("listview_distance", "" + listViewDistance.get(i));
+                    aList.add(hm);
+                }
+
+                String[] from = {"listview_image", "listview_message", "listview_address"};
+                int[] to = {R.id.listview_image, R.id.listview_message, R.id.listview_address};
+
+                final SimpleAdapter simpleAdapter = new SimpleAdapter(getBaseContext(), aList, R.layout.near_marker_listview, from, to);
+                final ListView androidListView = (ListView) findViewById(R.id.list_view);
+                androidListView.setAdapter(simpleAdapter);
+
+                // Click Listener
+                androidListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+
+                        intent.putExtra("selectedLat", usersLat.get(position));
+                        intent.putExtra("selectedLng", usersLng.get(position));
+                        intent.putExtra("activity_id", "NearMarker");   // al titorno alla Main fa la stessa cosa di Near
+                        startActivity(intent);
+
+                        //Toast.makeText(getBaseContext(), listViewMessage.get(position),Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // LongClick Listener
+                androidListView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        return false;
+                    }
+                });
             }
-            else {   // altrimenti sotto quello precedente
-                rlpEmoji.addRule(RelativeLayout.BELOW, line[i - 1].getId());
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(NearMarkerActivity.this, "No data available!", Toast.LENGTH_LONG).show();
             }
-            rlpEmoji.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            emojiArray[i].setLayoutParams(rlpEmoji);    // setto i parametri definiti all'elemento
-            info.addView(emojiArray[i]);  // aggiungo l'elemento alla view
+        };
+        getData(listener);
 
-            // Gli altri elementi sotto funzionano tutti allo stesso modo, quindi evito di commentare
-            /************************************************************************/
+    }
 
-            messageArray[i].setText("" + usersMsg[i]);
-            messageArray[i].setTextSize(20);
-            messageArray[i].setTypeface(null, Typeface.BOLD);
+    protected void getData(final VolleyResponseListener listener){
+        String url = "http://afnecors.altervista.org/android2016/api.php/markers";
 
-            RelativeLayout.LayoutParams rlpMessage = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rlpMessage.setMargins(15, 10, 0, 0); // sx, su, dx, giù
+        JsonArrayRequest jsObjRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
-            rlpMessage.addRule(RelativeLayout.ALIGN_TOP, emojiArray[i].getId());
-            rlpMessage.addRule(RelativeLayout.RIGHT_OF, emojiArray[i].getId());
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        listener.onResponse(response);
+                    }
+                }, new Response.ErrorListener() {
 
-            messageArray[i].setLayoutParams(rlpMessage);
-            info.addView(messageArray[i]);
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
 
-            /************************************************************************/
+                    }
+                });
 
-            distanceArray[i].setText(distance.get(i) + " m");
-            messageArray[i].setTypeface(null, Typeface.ITALIC);
-
-            RelativeLayout.LayoutParams rlpDistance = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rlpDistance.setMargins(17, 0, 0, 10); // sx, su, dx, giù
-
-            rlpDistance.addRule(RelativeLayout.BELOW, messageArray[i].getId());
-            rlpDistance.addRule(RelativeLayout.RIGHT_OF, emojiArray[i].getId());
-
-            distanceArray[i].setLayoutParams(rlpDistance);
-            info.addView(distanceArray[i]);
-
-            /************************************************************************/
-
-            buttonDirectionsArray[i].setText("-->");
-            RelativeLayout.LayoutParams rlpButtonDirections = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-            rlpButtonDirections.addRule(RelativeLayout.ALIGN_BOTTOM, emojiArray[i].getId());
-            rlpButtonDirections.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
-            buttonDirectionsArray[i].setLayoutParams(rlpButtonDirections);
-            info.addView(buttonDirectionsArray[i]);
-
-            /************************************************************************/
-
-            RelativeLayout.LayoutParams rlpLine = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    1);
-
-            rlpLine.addRule(RelativeLayout.BELOW, emojiArray[i].getId());
-            //rlpLine.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            rlpLine.setMargins(70, 5, 0, 0);
-            line[i].setBackgroundColor(Color.parseColor("#B3B3B3"));
-
-            line[i].setLayoutParams(rlpLine);
-            info.addView(line[i]);
-        }
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 }
