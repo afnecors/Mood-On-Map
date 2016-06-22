@@ -298,8 +298,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
 
 
-
-
         /***********************************************************/
         /*  Aprire nuova activity quando si clicca su un marker    */
         /***********************************************************/
@@ -311,6 +309,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onClusterItemClick(Place item) {
                 Intent i = new Intent(mContext, ShowInfoMarkerActivity.class);
+                i.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
+                i.putExtra("myLng", myLng);
+                i.putExtra("id_marker", item.getId());
                 startActivity(i);
                 return false;
             }

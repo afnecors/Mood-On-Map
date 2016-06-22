@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="it.unitn.lpsmt.moodonmap.ShowInfoMarkerActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -21,4 +22,63 @@
 
     </android.support.design.widget.AppBarLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+    <TextView
+        android:id="@+id/tw_dettagli"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15sp"
+        android:paddingLeft="10sp"
+        android:text="Dettagli"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tw_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15sp"
+        android:text="Inviato il  "
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/iw_emoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp" />
+
+    <TextView
+        android:id="@+id/tw_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15sp"
+        android:layout_gravity="center"
+        android:text=""
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tw_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15sp"
+        android:text="Si trova a "
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tw_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15sp"
+        android:text="in "
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:visibility="invisible"
+        android:text="Elimina" />
+
+</LinearLayout>
