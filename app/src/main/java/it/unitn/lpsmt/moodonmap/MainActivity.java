@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
         // Robe auto-generate da google:
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -359,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(17));     // imposta lo zoom
 
                     //riempio il cluster in caso sia vuoto per la setting
-                    setMarker();
+                    setMarker(0, 0);
 
                     activity = "";  // resetto l'identificatore di chi ha chiamato l'activity
                     break;
@@ -371,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(17));     // imposta lo zoom
 
                     //riempio il cluster in caso sia vuoto per la setting
-                    setMarker();
+                    setMarker(0, 0);
                     
                     activity = "";
                     break;
@@ -387,7 +386,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         id_e=R.drawable.sad;
                     }
 
-
                     //elimino elementi ne cluster
                     markerMap.clear();
                     mMap.clear();
@@ -395,68 +393,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mClusterManager.cluster();
                     googleMap.clear();
 
-
                     /**
                      * Recupero solo i dati che mi interessano dal server
                      */
-                    final int finalId_e = id_e;
-                    setting_listener = new VolleyResponseListener() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            JSONObject jo = null;
-                            Gson gson = new Gson();
-                            Place p = null;
-
-                            // Da myLat e myLng creo un oggetto Location per definire dove si trova l'utente
-                            Location myLocation = new Location("");
-                            myLocation.setLatitude(myLat);
-                            myLocation.setLongitude(myLng);
-
-                            List<Integer> distance = new ArrayList<>(); // lista di distanze tra myLocation e tutti gli altri marker
-
-                            // tutti gli altri marker li salvo in usersLocation, usando tutte le lat e lng
-                            Location[] markerLocation = new Location[response.length()];
-
-                            // cicla la lista di oggetti json
-                            for (int i = 0; i < response.length(); i++) {
-                                try {
-                                    jo = response.getJSONObject(i); // ritorna un singolo oggetto json
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                                p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                                p.forceImageFromIdEmo(); // aggiunge l'immagine
-                                p.forcePosition(); // aggiunge la posizione
-
-                                markerLocation[i] = new Location("");
-                                markerLocation[i].setLatitude(p.getLatitude());
-                                markerLocation[i].setLongitude(p.getLongitude());
-                                distance.add((int) myLocation.distanceTo(markerLocation[i])); // calcola la distanza tra myLocation e gli altri marker e la mette in distance
-
-                                if(p.getId_emo()==finalId_e && distance.get(i)<range){
-                                  
-                                        mClusterManager.addItem(p);
-                                        mClusterManager.cluster();
-
-                                }
-
-                            }
-                            mClusterManager.setRenderer(new OwnIconRendered(MainActivity.this, mMap, mClusterManager));
-                        }
-
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
-                        }
-                    };
-
-                    getData(setting_listener);
-
-
-
-
-
+                    setMarker(range, id_e);
                     activity = "";
                     break;
 
@@ -464,9 +404,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     break;
             }
 
-
-        }else{
-            setMarker();
+        } else {
+            setMarker(0, 0);
         }
 
 
@@ -587,8 +526,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return BitmapDescriptorFactory.fromBitmap(bMarker);
     }
 
-    protected void getData(final VolleyResponseListener listener){
+    protected void getData(final VolleyResponseListener listener, Integer id_emo_setting){
         String url = "http://afnecors.altervista.org/android2016/api.php/markers";
+
+        switch (id_emo_setting) {
+            case R.drawable.bored:
+                url += "?id_emo=" + R.drawable.bored;
+                break;
+            case R.drawable.lol:
+                url += "?id_emo=" + R.drawable.lol;
+                break;
+            case R.drawable.sad:
+                url += "?id_emo=" + R.drawable.sad;
+                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
 
         JsonArrayRequest jsObjRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -611,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //mette i marker dal server nel clusterManager
-    public void setMarker(){
+    public void setMarker(final int distance_setting, Integer id_emo_setting){
         /**
          * Recupero i dati dal server
          */
@@ -622,6 +576,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Gson gson = new Gson();
                 Place p = null;
 
+                // Da myLat e myLng creo un oggetto Location per definire dove si trova l'utente
+                Location myLocation = new Location("");
+                myLocation.setLatitude(myLat);
+                myLocation.setLongitude(myLng);
+
+                List<Integer> distance = new ArrayList<>(); // lista di distanze tra myLocation e tutti gli altri marker
+
+                // tutti gli altri marker li salvo in usersLocation, usando tutte le lat e lng
+                Location[] markerLocation = new Location[response.length()];
+
                 // cicla la lista di oggetti json
                 for (int i = 0; i < response.length(); i++) {
                     try {
@@ -630,10 +594,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         e.printStackTrace();
                     }
 
-                    Log.wtf("a JSON war exploded: ", jo.toString());    // debug
                     p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
                     p.forceImageFromIdEmo(); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
+
 
                     // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
                     title.add(p.getMessage());
@@ -642,13 +606,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     icon.add(p.getId_emo());
                     id_device.add(p.getId_device());
 
-                    // test per vedere se abbiamo tutti gli stessi id
-                    Log.wtf("ID R.drawable.sad ----> ", " " + R.drawable.sad);
-                    Log.wtf("ID R.drawable.lol ----> ", " " + R.drawable.lol);
-                    Log.wtf("ID R.drawable.bored ----> ", " " + R.drawable.bored);
+                    if (distance_setting == 0) {
+                        mClusterManager.addItem(p);
+                        mClusterManager.cluster();
+                    } else {
+                        markerLocation[i] = new Location("");
+                        markerLocation[i].setLatitude(p.getLatitude());
+                        markerLocation[i].setLongitude(p.getLongitude());
+                        distance.add((int) myLocation.distanceTo(markerLocation[i])); // calcola la distanza tra myLocation e gli altri marker e la mette in distance
 
-                    mClusterManager.addItem(p);
-                    mClusterManager.cluster();
+                        if(distance.get(i) < distance_setting){
+                            mClusterManager.addItem(p);
+                            mClusterManager.cluster();
+                        }
+                    }
                 }
                 mClusterManager.setRenderer(new OwnIconRendered(MainActivity.this, mMap, mClusterManager));
             }
@@ -658,6 +629,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(MainActivity.this, "No data available!", Toast.LENGTH_LONG).show();
             }
         };
-        getData(listener);
+        getData(listener, id_emo_setting);
     }
 }

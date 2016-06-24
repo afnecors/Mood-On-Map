@@ -44,7 +44,7 @@
         <activity
             android:name=".NearMarkerActivity"
             android:label="NearMarker"
-            android:theme="@style/AppTheme.NoActionBar" />
+            />
         <activity
             android:name=".NewMarkerActivity"
             android:label="NewMarker"
