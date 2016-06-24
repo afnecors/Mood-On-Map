@@ -1,10 +1,13 @@
 package it.unitn.lpsmt.moodonmap;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.provider.Settings;
@@ -87,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Verifico che il gps sia acceso
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
         setSupportActionBar(toolbar);
@@ -242,22 +251,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         mMap.setMyLocationEnabled(true);    // altri permessi della posizione, uno dei due sarà inutile?
-
-        // setto lat e lng
-        /*for (int i = 0; i < 10; i++) {
-            lat.add(seed_lat + 0.001);
-            lng.add(seed_lng + 0.001);
-            seed_lat = seed_lat + 0.001;
-            seed_lng = seed_lng + 0.001;
-        }
-
-        for (int i = 10; i < 20; i++) {
-            lat.add(seed_lat + 0.002);
-            lng.add(seed_lng - 0.001);
-            seed_lat = seed_lat + 0.001;
-            seed_lng = seed_lng + 0.001;
-        }
-        */
+        
 
         /****************************/
         /*  Clusterizzo i marker    */
@@ -630,5 +624,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
         getData(listener, id_emo_setting);
+    }
+
+    // se il gps è spento chiamo sta funzione (grazie stackoverflow)
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Il tuo GPS sembra essere spento, vuoi accenderlo?")
+                .setCancelable(false)
+                .setPositiveButton("Sì", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }
