@@ -47,7 +47,9 @@ public class SettingActivity extends AppCompatActivity {
 
         lv=(ListView) findViewById(R.id.listView);
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        lv.setAdapter(new ListSettingAdapter(this, prgmNameList, prgmImages));
+        final ListSettingAdapter myAdapter = new ListSettingAdapter(this, prgmNameList, prgmImages);
+        lv.setAdapter(myAdapter);
+
 
 
         current= (TextView) findViewById(R.id.curentValue);
@@ -58,7 +60,6 @@ public class SettingActivity extends AppCompatActivity {
 
         progressChanged=0;
         range.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
 
 
             @Override
@@ -86,16 +87,18 @@ public class SettingActivity extends AppCompatActivity {
         minValue.setText(String.valueOf(min));
         maxValue.setText(String.valueOf(max));
 
-        lv.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pos=position;
-            }
-        });
+//        lv.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                pos = position;
+//            }
+//        });
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pos = myAdapter.getCurrentListViewPosition();
+
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 intent.putExtra("range", progressChanged);
                 intent.putExtra("position",pos);//pos 0: bored pos 1: lol pos 2: sad

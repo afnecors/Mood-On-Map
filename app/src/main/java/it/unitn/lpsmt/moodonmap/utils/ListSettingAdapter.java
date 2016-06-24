@@ -59,7 +59,7 @@ public class ListSettingAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-        Holder holder=new Holder();
+        final Holder holder=new Holder();
         View rowView;
         rowView = inflater.inflate(R.layout.setting_list_view, null);
         holder.tv=(TextView) rowView.findViewById(R.id.textView1);
@@ -69,31 +69,31 @@ public class ListSettingAdapter extends BaseAdapter {
         holder.tv.setText(result[position]);
         holder.img.setImageResource(imageId[position]);
 
-        holder.radioBtn.setOnClickListener(new View.OnClickListener() {
+        holder.radioBtn.setClickable(false);
+
+//        holder.radioBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (position != mSelectedPosition && mSelectedRB != null) {
+//                    mSelectedRB.setChecked(false);
+//                }
+//
+//                mSelectedPosition = position;
+//                mSelectedRB = (RadioButton) v;
+//            }
+//        });
+
+        rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (position != mSelectedPosition && mSelectedRB != null) {
                     mSelectedRB.setChecked(false);
                 }
-
-                mSelectedPosition = position;
-                mSelectedRB = (RadioButton) v;
-            }
-        });
-
-        /*rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (position != mSelectedPosition && mSelectedRB != null) {
-                    mSelectedRB.setChecked(false);
-                }
-
+                holder.radioBtn.setChecked(true);
                 mSelectedPosition = position;
                 mSelectedRB = holder.radioBtn;
-                Toast.makeText(context, "You Clicked "+result[position], Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
 
         if(mSelectedPosition != position){
             holder.radioBtn.setChecked(false);
@@ -104,8 +104,11 @@ public class ListSettingAdapter extends BaseAdapter {
             }
         }
 
-
         return rowView;
+    }
+
+    public int getCurrentListViewPosition() {
+        return this.mSelectedPosition;
     }
 
 }
