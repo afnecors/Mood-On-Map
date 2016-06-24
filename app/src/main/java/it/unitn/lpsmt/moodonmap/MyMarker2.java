@@ -110,6 +110,7 @@ public class MyMarker2 extends AppCompatActivity {
                     }
                 });
 
+
                 // LongClick Listener
                 androidListView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
