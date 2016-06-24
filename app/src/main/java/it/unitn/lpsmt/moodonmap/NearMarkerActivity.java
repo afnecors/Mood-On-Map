@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,14 +50,14 @@ import it.unitn.lpsmt.moodonmap.utils.Place;
  */
 public class NearMarkerActivity extends AppCompatActivity {
 
-    //double myLat;
-    //double myLng;
+    double myLat;
+    double myLng;
     ArrayList<Double> usersLat = new ArrayList<>();
     ArrayList<Double> usersLng = new ArrayList<>();
 
-    //final List<Integer> distance = new ArrayList<>(); // lista di distanze tra myLocation e tutti gli altri marker
-    //ArrayList<Location> usersLocation = new ArrayList<>();  // posizione degli altri marker
-    //Location myLocation = new Location("");     // la mia posizione
+    final List<String> distance = new ArrayList<>(); // lista di distanze tra myLocation e tutti gli altri marker
+    ArrayList<Location> usersLocation = new ArrayList<>();  // posizione degli altri marker
+    Location myLocation = new Location("");     // la mia posizione
 
     VolleyResponseListener listener;
 
@@ -66,21 +67,26 @@ public class NearMarkerActivity extends AppCompatActivity {
     //ArrayList<Integer> listViewDistance = new ArrayList<>();
     List<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
 
+    String unit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.near_marker_activity);
 
         // Prendo gli extra passati dalla mainActivity
-        //Bundle extras = getIntent().getExtras();
-        //if (extras != null) {
-        //    myLat = extras.getDouble("myLat");
-        //    myLng = extras.getDouble("myLng");
-        //}
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            myLat = extras.getDouble("myLat");
+            myLng = extras.getDouble("myLng");
+        }
+
+        Log.wtf("myLat is", ""+myLat);
+        Log.wtf("myLng is", ""+myLng);
 
         // Da myLat e myLng creo un oggetto Location per definire dove si trova l'utente
-        //myLocation.setLatitude(myLat);
-        //myLocation.setLongitude(myLng);
+        myLocation.setLatitude(myLat);
+        myLocation.setLongitude(myLng);
 
         listener = new VolleyResponseListener() {
             @Override
@@ -105,14 +111,49 @@ public class NearMarkerActivity extends AppCompatActivity {
                     usersLng.add(p.getLongitude());
 
                     // uso l'oggetto usersLocation per calcolare le distanze tra me e gli altri
-                    //usersLocation.add(new Location(""));
-                    //usersLocation.get(i).setLatitude(usersLat.get(i));
-                    //usersLocation.get(i).setLongitude(usersLng.get(i));
-                    //distance.add((int) myLocation.distanceTo(usersLocation.get(i))); // calcola la distanza tra myLocation e usersLocation[i] e la mette in distance
+                    usersLocation.add(new Location(""));
+                    usersLocation.get(i).setLatitude(usersLat.get(i));
+                    usersLocation.get(i).setLongitude(usersLng.get(i));
+                    //distance.add(myLocation.distanceTo(usersLocation.get(i))); // calcola la distanza tra myLocation e usersLocation[i] e la mette in distance
+
+                    DecimalFormat df = new DecimalFormat(); // cose per i km e metri e arrotondamenti
+
+                    if(myLocation.distanceTo(usersLocation.get(i)) > 1000){
+                        df.setMaximumFractionDigits(2);
+                        distance.add(df.format(myLocation.distanceTo(usersLocation.get(i)) / 1000));
+                        unit = "Km";
+                    }
+                    else{
+                        df.setMaximumFractionDigits(0);
+                        distance.add(df.format(myLocation.distanceTo(usersLocation.get(i))));
+                        unit = "Metri";
+                    }
+
+                    Log.wtf("Distanza", i + " - " + distance.get(i).toString());
+
+                    // gestione dell'indirizzo, tipo se è troppo lungo lo taglio
+                    String address;
+                    if(p.getAddress(NearMarkerActivity.this).length() > 27) {
+                        address = p.getAddress(NearMarkerActivity.this).substring(0, 27);
+                        address = address.concat("...");
+                    }
+                    else{
+                        address = p.getAddress(NearMarkerActivity.this);
+                    }
+
+                    // gestione del messaggio, tipo se è troppo lungo lo taglio
+                    String message;
+                    if(p.getMessage().length() > 28) {
+                        message = p.getMessage().substring(0, 28);
+                        message = message.concat("...");
+                    }
+                    else{
+                        message = p.getMessage();
+                    }
 
                     listViewImage.add(p.getId_emo());
-                    listViewMessage.add(p.getMessage());
-                    listViewAddress.add(p.getAddress(NearMarkerActivity.this));
+                    listViewMessage.add(message);
+                    listViewAddress.add(address + " -> " + distance.get(i) + " " + unit);
                     //listViewDistance.add(distance.get(i));
                 }
 
