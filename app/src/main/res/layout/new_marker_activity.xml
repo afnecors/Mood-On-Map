@@ -32,7 +32,10 @@
             android:id="@+id/emoji"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/appBar">
+            android:layout_below="@+id/appBar"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -81,36 +84,55 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/selectedEmoji"
-            android:text="Informazione posizione" />
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:text="Informazione posizione"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
         <TextView
             android:id="@+id/city"
-            android:textAllCaps="true"
-            android:fontFamily="Arial"
-            android:paddingLeft="20sp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/labelInfo" />
+            android:layout_below="@+id/labelInfo"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
         <TextView
             android:id="@+id/labelMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/city"
-            android:text="Messaggio" />
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:text="Messaggio"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
         <EditText
             android:id="@+id/message"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/labelMsg"
-            android:hint="Scrivi qualcosa" />
+            android:hint="Inserisci un messaggio"
+            android:textSize="15sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
 
         <Button
             android:id="@+id/buttonSave"
+            android:layout_alignParentBottom="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/message"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="?attr/colorPrimary"
+            android:textColor="@color/white"
             android:text="SALVA" />
 
 

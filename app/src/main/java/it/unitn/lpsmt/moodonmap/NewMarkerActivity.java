@@ -1,13 +1,10 @@
 package it.unitn.lpsmt.moodonmap;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,13 +18,8 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -101,9 +93,11 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         }
 
         assert addresses != null;
-        if (addresses.size() > 0)   // se il gps non è arrivato a prendere la posizione dell'utente, qui crasha
-            city.setText(addresses.get(0).getLocality() + ": " + addresses.get(0).getAddressLine(0));
+        if (addresses.size() > 0) {// se il gps non è arrivato a prendere la posizione dell'utente, qui crasha
+            String locationDescr = addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getLocality();
+            city.setText(locationDescr);
             //city.setText(addresses.get(0).getLocality());
+        }
 
         // torno alla mainActivity passando messaggio, lat, lng, e id emoji
         buttonSave.setOnClickListener(new View.OnClickListener() {
