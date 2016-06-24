@@ -99,6 +99,7 @@ public class MyMarker2 extends AppCompatActivity {
                         intent.putExtra("selectedLat", usersLat.get(position));
                         intent.putExtra("selectedLng", usersLng.get(position));
                         intent.putExtra("activity_id", "NearMarker");   // al titorno alla Main fa la stessa cosa di Near
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
 
                         //Toast.makeText(getBaseContext(), listViewMessage.get(position),Toast.LENGTH_SHORT).show();

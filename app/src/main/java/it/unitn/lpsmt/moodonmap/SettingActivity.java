@@ -31,6 +31,8 @@ public class SettingActivity extends AppCompatActivity {
     int pos;
     int progressChanged;
 
+
+
     ArrayList prgmName;
     public static int [] prgmImages={R.drawable.bored,R.drawable.lol,R.drawable.sad};
     public static String [] prgmNameList={"bored","happy","sad"};
@@ -104,10 +106,13 @@ public class SettingActivity extends AppCompatActivity {
                 intent.putExtra("position",pos);//pos 0: bored pos 1: lol pos 2: sad
                 intent.putExtra("activity_id", "setting");
                 Toast.makeText(context, "You Selected "+pos, Toast.LENGTH_LONG).show();
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
 
 
      }
+
+
 }

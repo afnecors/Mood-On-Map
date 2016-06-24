@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.provider.Settings;
 
 import android.support.annotation.NonNull;
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private ClusterManager<Place> mClusterManager;
 
+    boolean doubleBackToExitPressedOnce = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent intent = new Intent(getBaseContext(), NewMarkerActivity.class);
                 intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
                 intent.putExtra("myLng", myLng);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
             }
@@ -124,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 intent.putExtra("myLat", myLat);      // passo myLat e myLng all'activity chiamata
                 intent.putExtra("myLng", myLng);
                 intent.putExtra("numberOfMarkers", lat.size()); // il numero di markers sulla mappa
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 // Invece di passare tutti i marker passo ogni singoli oggetti che li compongono
                 // perchè è più facile, anche se più lungo
@@ -152,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 intent.putExtra("myLng", myLng);
                 //intent.putExtra("numberOfMarkers", lat.size()); // il numero di markers sulla mappa
                 intent.putExtra("android_id", android_id);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 // Invece di passare tutti i marker passo ogni singoli oggetti che li compongono
                 // perchè è più facile, anche se più lungo
@@ -643,5 +649,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 }

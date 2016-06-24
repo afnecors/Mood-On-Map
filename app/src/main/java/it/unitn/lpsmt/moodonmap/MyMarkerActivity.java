@@ -144,6 +144,7 @@ public class MyMarkerActivity extends AppCompatActivity {
                             intent.putExtra("selectedLat", usersLat.get(final_i));
                             intent.putExtra("selectedLng", usersLng.get(final_i));
                             intent.putExtra("activity_id", "NearMarker");   // al titorno alla Main fa la stessa cosa di Near
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         }
                     }

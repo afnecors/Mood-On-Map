@@ -114,6 +114,7 @@ public class ShowInfoMarkerActivity extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                     deleteData(finalP.getId());
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
                                 }
                             });

@@ -127,7 +127,7 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
 
                     // Invia il marker per il salvataggio sul server
                     sendData(newPlace);
-
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), "Scegli un mooooood", Toast.LENGTH_SHORT);
