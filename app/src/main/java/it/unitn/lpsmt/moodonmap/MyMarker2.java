@@ -54,6 +54,10 @@ public class MyMarker2 extends AppCompatActivity {
                 Gson gson = new Gson();
                 Place p = null;
 
+                if (response.length() == 0) {
+                    Toast.makeText(MyMarker2.this, "Non hai ancora inserito nessun marker!", Toast.LENGTH_LONG).show();
+                }
+
                 // cicla la lista di oggetti json
                 for (int i = 0; i < response.length(); i++) {
                     try {
