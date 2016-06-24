@@ -30,9 +30,9 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25dp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Mostra solo:"
+            android:text="Mostra solo"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:paddingRight="16dp"
@@ -51,9 +51,9 @@
             android:id="@+id/range"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25dp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Range in Km:"
+            android:text="Range in Km"
             android:layout_below="@+id/listView"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
@@ -77,24 +77,57 @@
             android:id="@+id/minValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textStyle="bold"
             android:layout_alignBottom="@+id/seekbar"
             android:layout_alignParentLeft="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             android:gravity="center" />
 
         <TextView
             android:id="@+id/maxValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textStyle="bold"
             android:layout_alignBottom="@id/seekbar"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             android:gravity="center" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekbar"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/Value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Valore attuale "
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:gravity="left"
+            />
 
         <TextView
             android:id="@+id/curentValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/seekbar"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             android:gravity="center" />
+
+    </LinearLayout>
+
+
+
 
         <Button
             android:id="@+id/ButtonSave"
