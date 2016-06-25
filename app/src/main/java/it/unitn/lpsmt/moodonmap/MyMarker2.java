@@ -33,7 +33,7 @@ public class MyMarker2 extends AppCompatActivity {
     VolleyResponseListener listener;
 
     ArrayList<String> listViewMessage = new ArrayList<>();
-    ArrayList<Integer> listViewImage = new ArrayList<>();
+    ArrayList<String> listViewImage = new ArrayList<>();
     ArrayList<String> listViewAddress = new ArrayList<>();
 
     ArrayList<Double> usersLat = new ArrayList<>();
@@ -67,7 +67,7 @@ public class MyMarker2 extends AppCompatActivity {
                     }
 
                     p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    //p.forceImageFromIdEmo(); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
 
                     listViewImage.add(p.getId_emo());

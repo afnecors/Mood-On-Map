@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ArrayList<String> id_device = new ArrayList<>(); // tutti gli id dei dispositivi
     ArrayList<String> title = new ArrayList<>();    // titoli dei marker (AKA: messaggi)
     ArrayList<String> snippet = new ArrayList<>();  // snippet dei marker (ancora da usare)
-    ArrayList<Integer> icon = new ArrayList<>();    // id degli emoji sui marker
+    ArrayList<String> icon = new ArrayList<>();    // id degli emoji sui marker
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             String message = extras.getString("message");   // da NewMarkerActivity
             double newLng = extras.getDouble("lng");    // da NewMarkerActivity
             double newLat = extras.getDouble("lat");    // da NewMarkerActivity
-            int rId = extras.getInt("rId");     // da NewMarkerActivity
+            String emoji = extras.getString("emoji");     // da NewMarkerActivity
 
             double selectedLng = extras.getDouble("selectedLng");   // da NearMarkerActivity
             double selectedLat = extras.getDouble("selectedLat");   // da NearMarkerActivity
@@ -349,7 +349,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //BitmapDescriptor selectedIcon = resizeMarker(rId, 100, 100); // chiamo il metodo per ridimensionare il nuovo marker
                     //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata
 
-                    mClusterManager.addItem(new Place(android_id,newLat, newLng, message, "snippet", rId)); // aggiungno nuovo marker al cluster
+                    Log.wtf("stringa emoticon", emoji);
+
+                    mClusterManager.addItem(new Place(android_id,newLat, newLng, message, "snippet", emoji)); // aggiungno nuovo marker al cluster
                     mClusterManager.cluster(); // refresho il cluster
 
                     CameraUpdate newLatLng =    // imposto la posizione della mappa
@@ -595,7 +597,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
 
                     p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    //p.forceImageFromIdEmo(); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
 
 

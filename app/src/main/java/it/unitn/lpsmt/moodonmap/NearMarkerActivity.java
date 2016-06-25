@@ -62,7 +62,7 @@ public class NearMarkerActivity extends AppCompatActivity {
     VolleyResponseListener listener;
 
     ArrayList<String> listViewMessage = new ArrayList<>();
-    ArrayList<Integer> listViewImage = new ArrayList<>();
+    ArrayList<String> listViewImage = new ArrayList<>();
     ArrayList<String> listViewAddress = new ArrayList<>();
     //ArrayList<Integer> listViewDistance = new ArrayList<>();
     List<HashMap<String, String>> aList = new ArrayList<HashMap<String, String>>();
@@ -104,7 +104,7 @@ public class NearMarkerActivity extends AppCompatActivity {
                     }
 
                     p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    //p.forceImageFromIdEmo(); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
 
                     usersLat.add(p.getLatitude());

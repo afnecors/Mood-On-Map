@@ -1,7 +1,9 @@
 package it.unitn.lpsmt.moodonmap.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 
@@ -28,17 +30,21 @@ public class Place implements ClusterItem {
     double longitude;
     String message;
     String snippet;
-    Integer id_emo;
+    String id_emo;
 
     LatLng mPosition;
     BitmapDescriptor immagine;
+    //Bitmap immagineBm;
+
 
     // Costruttore
-    public Place(String device_id, double lat, double lng, String mess, String snippet, Integer icon) {
+    public Place(String device_id, double lat, double lng, String mess, String snippet, String icon) {
+
 
         mPosition = new LatLng(lat, lng);
 
-        //immagine = BitmapDescriptorFactory.fromResource(icon);
+        //immagineBm = BitmapFactory.decodeFile(icon);
+        immagine = BitmapDescriptorFactory.fromFile(icon);
 
         latitude = lat;
         longitude = lng;
@@ -47,14 +53,14 @@ public class Place implements ClusterItem {
         snippet = snippet;
         id_device = device_id;
 
-        this.forceImageFromIdEmo();
+        //this.forceImageFromIdEmo();
     }
 
     public void forcePosition() {
         this.mPosition = new LatLng(this.latitude, this.longitude);
     }
 
-    public void forceImageFromIdEmo() {
+    /*public void forceImageFromIdEmo() {
         Integer sad = R.drawable.sad;
         Integer lol = R.drawable.lol;
         Integer bored = R.drawable.bored;
@@ -68,6 +74,9 @@ public class Place implements ClusterItem {
         else
             this.immagine = BitmapDescriptorFactory.fromResource(lol);
     }
+    */
+
+
 
     @Override
     public LatLng getPosition() {
@@ -122,11 +131,11 @@ public class Place implements ClusterItem {
         this.snippet = snippet;
     }
 
-    public Integer getId_emo() {
+    public String getId_emo() {
         return id_emo;
     }
 
-    public void setId_emo(Integer id_emo) {
+    public void setId_emo(String id_emo) {
         this.id_emo = id_emo;
     }
 
@@ -170,4 +179,6 @@ public class Place implements ClusterItem {
         json += "}";
         return json;
     }
+
+
 }

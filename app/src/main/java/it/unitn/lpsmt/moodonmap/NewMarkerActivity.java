@@ -1,6 +1,7 @@
 package it.unitn.lpsmt.moodonmap;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -44,16 +45,20 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     Button buttonSave;
     VolleyResponseListener listener;
     Place newPlace;
+    String emoji;
 
     Double lat;
     Double lng;
 
     int rId = 0;
+    Resources resources;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_marker_activity);
+
+        resources = getResources();
 
         /***************************************/
         /*  Inizializzazione elementi nell'xml */
@@ -103,17 +108,17 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (rId != 0) {
+                if (emoji != null && !emoji.isEmpty()) {
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                     intent.putExtra("message", message.getText().toString());
                     intent.putExtra("lat", lat);
                     intent.putExtra("lng", lng);
-                    intent.putExtra("rId", rId);
+                    intent.putExtra("emoji", emoji);
                     intent.putExtra("activity_id", "NewMarker");
 
                     final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                    newPlace = new Place(android_id, lat, lng, message.getText().toString(), "snippet",  rId);
+                    newPlace = new Place(android_id, lat, lng, message.getText().toString(), "snippet",  emoji);
 
                     //String body = new GsonBuilder().create().toJson(p);
 
@@ -124,7 +129,7 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Scegli un mooooood", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Scegli un'emoticon!", Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
@@ -137,18 +142,21 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         String toastMood = "";
         switch (v.getId()) {
             case R.id.sad:
-                rId = R.drawable.sad;
-                toastMood = "sad";
+                //rId = R.drawable.sad;
+                emoji = resources.getResourceEntryName(R.drawable.sad);
+                toastMood = ":(";
                 break;
 
             case R.id.lol:
-                rId = R.drawable.lol;
+                //rId = R.drawable.lol;
+                emoji = resources.getResourceEntryName(R.drawable.lol);
                 toastMood = "lol";
                 break;
 
             case R.id.bored:
-                rId = R.drawable.bored;
-                toastMood = "bored";
+                //rId = R.drawable.bored;
+                emoji = resources.getResourceEntryName(R.drawable.bored);
+                toastMood = "annoiato";
                 break;
 
             default:
