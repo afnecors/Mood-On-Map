@@ -67,10 +67,12 @@ public class MyMarker2 extends AppCompatActivity {
                     }
 
                     p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    p.forceImageFromIdEmo(MyMarker2.this); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
 
-                    listViewImage.add(p.getId_emo());
+
+                    int imgID = getResources().getIdentifier(p.getId_emo(), "drawable", getPackageName());
+                    listViewImage.add(imgID);
                     listViewMessage.add(p.getMessage());
                     listViewAddress.add(p.getAddress(MyMarker2.this));
 

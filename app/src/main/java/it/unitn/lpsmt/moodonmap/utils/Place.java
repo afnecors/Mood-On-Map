@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -28,17 +30,15 @@ public class Place implements ClusterItem {
     double longitude;
     String message;
     String snippet;
-    Integer id_emo;
+    String id_emo;
 
     LatLng mPosition;
     BitmapDescriptor immagine;
 
     // Costruttore
-    public Place(String device_id, double lat, double lng, String mess, String snippet, Integer icon) {
+    public Place(String device_id, double lat, double lng, String mess, String snippet, String icon) {
 
         mPosition = new LatLng(lat, lng);
-
-        //immagine = BitmapDescriptorFactory.fromResource(icon);
 
         latitude = lat;
         longitude = lng;
@@ -47,26 +47,42 @@ public class Place implements ClusterItem {
         snippet = snippet;
         id_device = device_id;
 
-        this.forceImageFromIdEmo();
     }
 
     public void forcePosition() {
         this.mPosition = new LatLng(this.latitude, this.longitude);
     }
 
-    public void forceImageFromIdEmo() {
-        Integer sad = R.drawable.sad;
-        Integer lol = R.drawable.lol;
-        Integer bored = R.drawable.bored;
+    public void forceImageFromIdEmo(Context ctx) {
+        //        String bored_name = this.getResources().getResourceName(R.drawable.bored);
+//        //Toast.makeText(MainActivity.this, "bored: "+bored, Toast.LENGTH_LONG).show();
+//        int bored_id = this.getResources().getIdentifier("bored", "drawable", this.getPackageName());
+//        //Toast.makeText(MainActivity.this, "bored: "+bored_id, Toast.LENGTH_LONG).show();
 
-        if (this.id_emo == sad.intValue())
-            this.immagine = BitmapDescriptorFactory.fromResource(sad);
-        else if (this.id_emo == lol.intValue())
-            this.immagine = BitmapDescriptorFactory.fromResource(lol);
-        else if (this.id_emo == bored.intValue())
-            this.immagine = BitmapDescriptorFactory.fromResource(bored);
-        else
-            this.immagine = BitmapDescriptorFactory.fromResource(lol);
+        int sad = ctx.getResources().getIdentifier("sad", "drawable", ctx.getPackageName());
+        int lol = ctx.getResources().getIdentifier("lol", "drawable", ctx.getPackageName());
+        int bored = ctx.getResources().getIdentifier("bored", "drawable", ctx.getPackageName());
+
+//        Log.wtf("sad => ", ""+sad);
+//        Log.wtf("sad2 =>", ""+R.drawable.sad);
+//        Log.wtf("id_emo =>", ""+id_emo);
+
+        switch (id_emo) {
+            case "lol":
+                immagine = BitmapDescriptorFactory.fromResource(lol);
+                break;
+            case "sad":
+                immagine = BitmapDescriptorFactory.fromResource(sad);
+                break;
+            case "bored":
+                immagine = BitmapDescriptorFactory.fromResource(bored);
+                break;
+            default:
+                immagine = BitmapDescriptorFactory.fromResource(R.drawable.ic_cast_light);
+                id_emo = ctx.getResources().getResourceEntryName(R.drawable.ic_cast_light);
+                break;
+        }
+
     }
 
     @Override
@@ -122,11 +138,11 @@ public class Place implements ClusterItem {
         this.snippet = snippet;
     }
 
-    public Integer getId_emo() {
+    public String getId_emo() {
         return id_emo;
     }
 
-    public void setId_emo(Integer id_emo) {
+    public void setId_emo(String id_emo) {
         this.id_emo = id_emo;
     }
 

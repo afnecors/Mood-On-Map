@@ -83,14 +83,14 @@ public class ShowInfoMarkerActivity extends AppCompatActivity {
 
                     Log.wtf("a JSON war exploded: ", jo.toString());    // debug
                     p = gson.fromJson(jo.toString(), Place.class); // genera l'oggetto Java dal json
-                    p.forceImageFromIdEmo(); // aggiunge l'immagine
+                    p.forceImageFromIdEmo(ShowInfoMarkerActivity.this); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
 
                     try {
                         tw_time.append(jo.getString("timestamp"));
 
-                        //iw_emoji.setImageResource(jo.getInt("id_emo"));
-                        iw_emoji.setImageResource(p.getId_emo());
+                        int id_emo = getResources().getIdentifier(p.getId_emo(), "drawable", getPackageName());
+                        iw_emoji.setImageResource(id_emo);
 
                         //tw_message.append(jo.getString("message"));
                         tw_message.append(p.getMessage());

@@ -48,7 +48,7 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     Double lat;
     Double lng;
 
-    int rId = 0;
+    String rId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,17 +93,17 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         }
 
         assert addresses != null;
-        if (addresses.size() > 0) {// se il gps non è arrivato a prendere la posizione dell'utente, qui crasha
+//        if (addresses.size() > 0) {// se il gps non è arrivato a prendere la posizione dell'utente, qui crasha
             String locationDescr = addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getLocality();
             city.setText(locationDescr);
             //city.setText(addresses.get(0).getLocality());
-        }
+//        }
 
         // torno alla mainActivity passando messaggio, lat, lng, e id emoji
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (rId != 0) {
+                if (rId != "") {
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                     intent.putExtra("message", message.getText().toString());
                     intent.putExtra("lat", lat);
@@ -117,15 +117,12 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
 
                     //String body = new GsonBuilder().create().toJson(p);
 
-                    Log.wtf("Miao", newPlace.toString());
-
                     // Invia il marker per il salvataggio sul server
                     sendData(newPlace);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Scegli un mooooood", Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(getApplicationContext(), "Scegli un mooooood", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -134,28 +131,23 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     // Memorizzo l'id dell'emoji selezionata
     @Override
     public void onClick(View v) {
-        String toastMood = "";
+        rId = "";
         switch (v.getId()) {
             case R.id.sad:
-                rId = R.drawable.sad;
-                toastMood = "sad";
+                rId = this.getResources().getResourceEntryName(R.drawable.sad);;
                 break;
-
             case R.id.lol:
-                rId = R.drawable.lol;
-                toastMood = "lol";
+                rId = this.getResources().getResourceEntryName(R.drawable.lol);;
                 break;
-
             case R.id.bored:
-                rId = R.drawable.bored;
-                toastMood = "bored";
+                rId = this.getResources().getResourceEntryName(R.drawable.bored);;
                 break;
-
+            case R.id.vomit:
+                rId = this.getResources().getResourceEntryName(R.drawable.vomit);
             default:
                 break;
         }
-        Toast toast = Toast.makeText(getApplicationContext(), toastMood, Toast.LENGTH_SHORT);
-        toast.show();
+        Toast.makeText(getApplicationContext(), rId, Toast.LENGTH_SHORT).show();
     }
 
     protected void sendData(final Place newPlace){
