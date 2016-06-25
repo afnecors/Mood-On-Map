@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -93,6 +94,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        String bored_name = this.getResources().getResourceName(R.drawable.bored);
+//        //Toast.makeText(MainActivity.this, "bored: "+bored, Toast.LENGTH_LONG).show();
+//        int bored_id = this.getResources().getIdentifier("bored", "drawable", this.getPackageName());
+//        //Toast.makeText(MainActivity.this, "bored: "+bored_id, Toast.LENGTH_LONG).show();
+
 
         // Verifico che il gps sia acceso
         final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
@@ -342,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-            message += " android_id:" + android_id;
+//            message += " android_id:" + android_id;
 
             switch (activity) {     // guardo da quale activity vengo
                 case "NewMarker":
