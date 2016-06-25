@@ -72,11 +72,29 @@ public class MyMarker2 extends AppCompatActivity {
                     p.forceImageFromIdEmo(MyMarker2.this); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
 
+                    String address;
+                    if(p.getAddress(MyMarker2.this).length() > 30) {
+                        address = p.getAddress(MyMarker2.this).substring(0, 30);
+                        address = address.concat("...");
+                    }
+                    else{
+                        address = p.getAddress(MyMarker2.this);
+                    }
+
+                    // gestione del messaggio, tipo se è troppo lungo lo taglio
+                    String message;
+                    if(p.getMessage().length() > 28) {
+                        message = p.getMessage().substring(0, 28);
+                        message = message.concat("...");
+                    }
+                    else{
+                        message = p.getMessage();
+                    }
 
                     int imgID = getResources().getIdentifier(p.getId_emo(), "drawable", getPackageName());
                     listViewImage.add(imgID);
-                    listViewMessage.add(p.getMessage());
-                    listViewAddress.add(p.getAddress(MyMarker2.this));
+                    listViewMessage.add(message);
+                    listViewAddress.add(address);
 
                     usersLat.add(p.getLatitude());
                     usersLng.add(p.getLongitude());

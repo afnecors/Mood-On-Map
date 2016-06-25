@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,6 +97,8 @@ public class NearMarkerActivity extends AppCompatActivity {
                 JSONObject jo = null;
                 Gson gson = new Gson();
                 Place p = null;
+
+                response = sortJsonArray(response);
 
                 // cicla la lista di oggetti json
                 // voglio soli i primi 10 altrimenti response.length()
@@ -236,5 +239,36 @@ public class NearMarkerActivity extends AppCompatActivity {
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+
+    public static JSONArray sortJsonArray(JSONArray array) {
+        List<JSONObject> jsons = new ArrayList<JSONObject>();
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                jsons.add(array.getJSONObject(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        Collections.sort(jsons, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject lhs, JSONObject rhs) {
+                String lid = null;
+                try {
+                    lid = lhs.getString("timestamp");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String rid = null;
+                try {
+                    rid = rhs.getString("timestamp");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return rid.compareTo(lid);
+            }
+        });
+        return new JSONArray(jsons);
     }
 }
