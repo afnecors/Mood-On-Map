@@ -538,16 +538,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String url = "http://afnecors.altervista.org/android2016/api.php/markers";
 
         switch (id_emo_setting) {
+
             case R.drawable.bored:
                 url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.bored);
                 break;
+
             case R.drawable.lol:
                 url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.lol);
                 break;
+
             case R.drawable.sad:
                 url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.sad);
                 //Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
                 break;
+
+            case R.drawable.vomit:
+                url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.vomit);
+                break;
+
             default:
                 break;
         }
@@ -584,8 +592,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 JSONObject jo = null;
                 Gson gson = new Gson();
                 Place p = null;
-
-
 
 
 
