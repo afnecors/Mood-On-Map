@@ -147,7 +147,7 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
             default:
                 break;
         }
-        Toast.makeText(getApplicationContext(), rId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(NewMarkerActivity.this, rId, Toast.LENGTH_SHORT).show();
     }
 
     protected void sendData(final Place newPlace){

@@ -78,8 +78,8 @@ public class Place implements ClusterItem {
                 immagine = BitmapDescriptorFactory.fromResource(bored);
                 break;
             default:
-                immagine = BitmapDescriptorFactory.fromResource(R.drawable.ic_cast_light);
-                id_emo = ctx.getResources().getResourceEntryName(R.drawable.ic_cast_light);
+                immagine = BitmapDescriptorFactory.fromResource(R.drawable.pin);
+                id_emo = ctx.getResources().getResourceEntryName(R.drawable.pin);
                 break;
         }
 
