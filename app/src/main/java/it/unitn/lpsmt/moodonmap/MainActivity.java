@@ -386,12 +386,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case "setting":
                     //Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_LONG).show();
                     int id_e = 0;
+
                     if(pos==0){
                         id_e=R.drawable.bored;
-                    }else if(pos==1){
+                    }
+
+                    else if(pos==1){
                         id_e=R.drawable.lol;
-                    }else if(pos==2){
+                    }
+
+                    else if(pos==2){
                         id_e=R.drawable.sad;
+                    }
+
+                    else if(pos==3){
+                        id_e=R.drawable.cry;
+                    }
+
+                    else if(pos==4){
+                        id_e=R.drawable.vomit;
+                    }
+
+                    else if(pos==5){
+                        id_e=R.drawable.love;
+                    }
+
+                    else if(pos==6){
+                        id_e=R.drawable.cool;
                     }
 
                     //elimino elementi ne cluster
@@ -554,6 +575,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             case R.drawable.vomit:
                 url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.vomit);
+                break;
+
+            case R.drawable.love:
+                url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.love);
+                break;
+
+            case R.drawable.cool:
+                url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.cool);
+                break;
+
+            case R.drawable.cry:
+                url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.cry);
                 break;
 
             default:

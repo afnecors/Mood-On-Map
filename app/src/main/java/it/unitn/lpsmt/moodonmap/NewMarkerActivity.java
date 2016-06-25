@@ -40,6 +40,9 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
     ImageButton bored;
     ImageButton lol;
     ImageButton vomit;
+    ImageButton cry;
+    ImageButton love;
+    ImageButton cool;
 
     TextView city;
     EditText message;
@@ -70,6 +73,9 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         bored = (ImageButton) findViewById(R.id.bored);
         lol = (ImageButton) findViewById(R.id.lol);
         vomit = (ImageButton) findViewById(R.id.vomit);
+        cry = (ImageButton) findViewById(R.id.cry);
+        love = (ImageButton) findViewById(R.id.love);
+        cool = (ImageButton) findViewById(R.id.cool);
 
         city = (TextView) findViewById(R.id.city);
 
@@ -81,6 +87,9 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         lol.setOnClickListener(this);
         bored.setOnClickListener(this);
         vomit.setOnClickListener(this);
+        cry.setOnClickListener(this);
+        love.setOnClickListener(this);
+        cool.setOnClickListener(this);
 
         // Prendo lat e lng dalla mainActivity
         Bundle extras = getIntent().getExtras();
@@ -157,6 +166,18 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.vomit:
                 rId = this.getResources().getResourceEntryName(R.drawable.vomit);
+                break;
+
+            case R.id.love:
+                rId = this.getResources().getResourceEntryName(R.drawable.love);
+                break;
+
+            case R.id.cool:
+                rId = this.getResources().getResourceEntryName(R.drawable.cool);
+                break;
+
+            case R.id.cry:
+                rId = this.getResources().getResourceEntryName(R.drawable.cry);
                 break;
 
             default:

@@ -77,6 +77,33 @@
                     android:background="?android:selectableItemBackground"
                     android:src="@drawable/vomit" />
 
+                <ImageButton
+                    android:id="@+id/cry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="5sp"
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/cry" />
+
+                <ImageButton
+                    android:id="@+id/cool"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="5sp"
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/cool" />
+
+                <ImageButton
+                    android:id="@+id/love"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="5sp"
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/love" />
+
             </LinearLayout>
         </HorizontalScrollView>
 

@@ -34,8 +34,16 @@ public class SettingActivity extends AppCompatActivity {
 
 
     ArrayList prgmName;
-    public static int [] prgmImages={R.drawable.bored,R.drawable.lol,R.drawable.sad};
-    public static String [] prgmNameList={"bored","happy","sad"};
+    public static int [] prgmImages = {
+            R.drawable.bored,
+            R.drawable.lol,
+            R.drawable.sad,
+            R.drawable.cry,
+            R.drawable.vomit,
+            R.drawable.love,
+            R.drawable.cool
+    };
+    public static String [] prgmNameList = {"bored", "happy", "sad", "cry", "vomit", "love", "cool"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
