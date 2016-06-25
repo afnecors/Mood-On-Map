@@ -73,6 +73,8 @@ public class NearMarkerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.near_marker_activity);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Prendo gli extra passati dalla mainActivity
         Bundle extras = getIntent().getExtras();

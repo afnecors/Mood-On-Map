@@ -42,31 +42,44 @@
             android:name=".MyMarkerActivity"
             android:label="I miei mood"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:parentActivityName="it.unitn.lpsmt.moodonmap.MainActivity"
+            />
+
         <activity
             android:name=".NearMarkerActivity"
             android:label="Mood vicini"
             android:screenOrientation="portrait"
+            android:parentActivityName="it.unitn.lpsmt.moodonmap.MainActivity"
             />
+
         <activity
             android:name=".NewMarkerActivity"
             android:label="Inserisci un mood"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
+            android:parentActivityName="it.unitn.lpsmt.moodonmap.MainActivity"
             />
+
         <activity
             android:name=".SettingActivity"
             android:label="Filtri"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:parentActivityName="it.unitn.lpsmt.moodonmap.MainActivity"
+            />
+
         <activity
             android:name=".ShowInfoMarkerActivity"
             android:label="Informazioni mood"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:parentActivityName="it.unitn.lpsmt.moodonmap.MainActivity"
+            />
 
         <activity android:name=".MyMarker2"
             android:label="I miei mood"
             android:screenOrientation="portrait"
+            android:parentActivityName="it.unitn.lpsmt.moodonmap.MainActivity"
             />
 
         <meta-data
@@ -75,5 +88,4 @@
 
 
     </application>
-
 </manifest>

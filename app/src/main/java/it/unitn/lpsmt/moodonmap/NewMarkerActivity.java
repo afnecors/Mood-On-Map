@@ -63,6 +63,8 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         sad = (ImageButton) findViewById(R.id.sad);
         bored = (ImageButton) findViewById(R.id.bored);
