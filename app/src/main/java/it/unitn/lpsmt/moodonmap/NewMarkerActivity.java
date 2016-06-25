@@ -93,11 +93,14 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
         }
 
         assert addresses != null;
-//        if (addresses.size() > 0) {// se il gps non è arrivato a prendere la posizione dell'utente, qui crasha
-            String locationDescr = addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getLocality();
-            city.setText(locationDescr);
-            //city.setText(addresses.get(0).getLocality());
-//        }
+
+        if (addresses != null) {
+            if (addresses.size() > 0) {// se il gps non è arrivato a prendere la posizione dell'utente, qui crasha
+                String locationDescr = addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getLocality();
+                city.setText(locationDescr);
+                //city.setText(addresses.get(0).getLocality());
+            }
+        }
 
         // torno alla mainActivity passando messaggio, lat, lng, e id emoji
         buttonSave.setOnClickListener(new View.OnClickListener() {

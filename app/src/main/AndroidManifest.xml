@@ -40,32 +40,32 @@
         </activity>
         <activity
             android:name=".MyMarkerActivity"
-            android:label="MyMarker"
+            android:label="I miei mood"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".NearMarkerActivity"
-            android:label="NearMarker"
+            android:label="Mood vicini"
             android:screenOrientation="portrait"
             />
         <activity
             android:name=".NewMarkerActivity"
-            android:label="NewMarker"
+            android:label="Inserisci un mood"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             />
         <activity
             android:name=".SettingActivity"
-            android:label="Setting"
+            android:label="Filtri"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ShowInfoMarkerActivity"
-            android:label="InfoMarker"
+            android:label="Informazioni mood"
             android:screenOrientation="portrait"/>
 
         <activity android:name=".MyMarker2"
-            android:label="MyMarker2"
+            android:label="I miei mood"
             android:screenOrientation="portrait"
             />
 

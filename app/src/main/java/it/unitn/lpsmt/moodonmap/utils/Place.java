@@ -54,18 +54,24 @@ public class Place implements ClusterItem {
     }
 
     public void forceImageFromIdEmo(Context ctx) {
-        //        String bored_name = this.getResources().getResourceName(R.drawable.bored);
-//        //Toast.makeText(MainActivity.this, "bored: "+bored, Toast.LENGTH_LONG).show();
-//        int bored_id = this.getResources().getIdentifier("bored", "drawable", this.getPackageName());
-//        //Toast.makeText(MainActivity.this, "bored: "+bored_id, Toast.LENGTH_LONG).show();
+        //String bored_name = this.getResources().getResourceName(R.drawable.bored);
+        //Toast.makeText(MainActivity.this, "bored: "+bored, Toast.LENGTH_LONG).show();
+        //int bored_id = this.getResources().getIdentifier("bored", "drawable", this.getPackageName());
+        //Toast.makeText(MainActivity.this, "bored: "+bored_id, Toast.LENGTH_LONG).show();
 
+
+        /*
+         * Questo è necessario per prevenire immagini casuali nel caso in cui nel DB fossero
+         * salvati degli identificatori di emoji non più riconosciuti.
+         * Altrimenti sarebbe sufficiente fare:
+         *
+         * int id = ctx.getResources().getIdentifier(id_emo, "drawable", ctx.getPackageName());
+         * immagine = BitmapDescriptorFactory.fromResource(id);
+         *
+         */
         int sad = ctx.getResources().getIdentifier("sad", "drawable", ctx.getPackageName());
         int lol = ctx.getResources().getIdentifier("lol", "drawable", ctx.getPackageName());
         int bored = ctx.getResources().getIdentifier("bored", "drawable", ctx.getPackageName());
-
-//        Log.wtf("sad => ", ""+sad);
-//        Log.wtf("sad2 =>", ""+R.drawable.sad);
-//        Log.wtf("id_emo =>", ""+id_emo);
 
         switch (id_emo) {
             case "lol":

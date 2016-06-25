@@ -96,7 +96,8 @@ public class NearMarkerActivity extends AppCompatActivity {
                 Place p = null;
 
                 // cicla la lista di oggetti json
-                for (int i = 0; i < response.length(); i++) {
+                // voglio soli i primi 10 altrimenti response.length()
+                for (int i = 0; i < 10; i++) {
                     try {
                         jo = response.getJSONObject(i); // ritorna un singolo oggetto json
                     } catch (JSONException e) {
@@ -154,7 +155,7 @@ public class NearMarkerActivity extends AppCompatActivity {
                     int imgID = getResources().getIdentifier(p.getId_emo(), "drawable", getPackageName());
                     listViewImage.add(imgID);
                     listViewMessage.add(message);
-                    listViewAddress.add(address + " -> " + distance.get(i) + " " + unit);
+                    listViewAddress.add(address + " – " + distance.get(i) + " " + unit);
                     //listViewDistance.add(distance.get(i));
                 }
 
