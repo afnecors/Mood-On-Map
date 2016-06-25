@@ -72,17 +72,25 @@ public class Place implements ClusterItem {
         int sad = ctx.getResources().getIdentifier("sad", "drawable", ctx.getPackageName());
         int lol = ctx.getResources().getIdentifier("lol", "drawable", ctx.getPackageName());
         int bored = ctx.getResources().getIdentifier("bored", "drawable", ctx.getPackageName());
+        int vomit = ctx.getResources().getIdentifier("vomit", "drawable", ctx.getPackageName());
 
         switch (id_emo) {
             case "lol":
                 immagine = BitmapDescriptorFactory.fromResource(lol);
                 break;
+
             case "sad":
                 immagine = BitmapDescriptorFactory.fromResource(sad);
                 break;
+
             case "bored":
                 immagine = BitmapDescriptorFactory.fromResource(bored);
                 break;
+
+            case "vomit":
+                immagine = BitmapDescriptorFactory.fromResource(vomit);
+                break;
+
             default:
                 immagine = BitmapDescriptorFactory.fromResource(R.drawable.broken);
                 id_emo = ctx.getResources().getResourceEntryName(R.drawable.broken);
