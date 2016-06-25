@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             double selectedLat = extras.getDouble("selectedLat");   // da NearMarkerActivity
 
             int pos = extras.getInt("position");//da settingActivity
-            final int range = extras.getInt("range");//da settingActivity
+            int range = extras.getInt("range");//da settingActivity
 
             final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -546,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             case R.drawable.sad:
                 url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.sad);
-                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
