@@ -46,8 +46,8 @@ public class ShowInfoMarkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_info_marker_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
+  //      setSupportActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

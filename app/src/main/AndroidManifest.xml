@@ -62,16 +62,18 @@
         <activity
             android:name=".ShowInfoMarkerActivity"
             android:label="InfoMarker"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".MyMarker2"
+            android:label="MyMarker2"
+            android:screenOrientation="portrait"
+            />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".MyMarker2"
-            android:label="MyMarker2"
-            />
+
     </application>
 
 </manifest>

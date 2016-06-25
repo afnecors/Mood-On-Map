@@ -1,33 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="it.unitn.lpsmt.moodonmap.ShowInfoMarkerActivity">
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
+    android:padding="7dp">
 
     <TextView
         android:id="@+id/tw_dettagli"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="15sp"
-        android:paddingLeft="10sp"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
         android:text="Dettagli"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -37,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="15sp"
+        android:textStyle="italic"
         android:text="Inviato il  "
         android:textSize="12sp" />
 
@@ -45,23 +29,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingTop="10sp"
-        android:paddingBottom="10sp" />
+        android:layout_marginTop="24dp"
+         />
+
+    <TextView
+        android:id="@+id/tw_message_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:text="Messaggio"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tw_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="15sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:paddingLeft="16dp"
         android:layout_gravity="center"
         android:text=""
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        />
 
     <TextView
         android:id="@+id/tw_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="15sp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:text="Si trova a "
         android:textSize="12sp" />
 
@@ -69,16 +67,24 @@
         android:id="@+id/tw_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="15sp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:text="in "
         android:textSize="12sp" />
 
     <Button
         android:id="@+id/button_delete"
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
         android:visibility="invisible"
-        android:text="Elimina" />
+        android:text="Elimina"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:background="?attr/colorPrimary"
+        android:textColor="@color/white"
+        />
+
 
 </LinearLayout>
