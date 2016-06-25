@@ -384,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     break;
 
                 case "setting":
-                    Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_LONG).show();
                     int id_e = 0;
                     if(pos==0){
                         id_e=R.drawable.bored;
@@ -573,16 +573,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //mette i marker dal server nel clusterManager
-    public void setMarker(final int distance_setting, Integer id_emo_setting){
+    public void setMarker(int distance_setting, Integer id_emo_setting){
         /**
          * Recupero i dati dal server
          */
+        final int d_s=distance_setting;
         listener = new VolleyResponseListener() {
             @Override
             public void onResponse(JSONArray response) {
                 JSONObject jo = null;
                 Gson gson = new Gson();
                 Place p = null;
+
+
+
+
 
                 // Da myLat e myLng creo un oggetto Location per definire dove si trova l'utente
                 Location myLocation = new Location("");
@@ -616,16 +621,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     icon.add(p.getId_emo());
                     id_device.add(p.getId_device());
 
-                    if (distance_setting == 0) {
+                    if (d_s == 0) {
                         mClusterManager.addItem(p);
                         mClusterManager.cluster();
+                        //Toast.makeText(getApplicationContext(),"ciao"+d_s, Toast.LENGTH_SHORT).show();
+
                     } else {
                         markerLocation[i] = new Location("");
                         markerLocation[i].setLatitude(p.getLatitude());
                         markerLocation[i].setLongitude(p.getLongitude());
                         distance.add((int) myLocation.distanceTo(markerLocation[i])); // calcola la distanza tra myLocation e gli altri marker e la mette in distance
 
-                        if(distance.get(i) < distance_setting){
+                        if(distance.get(i) < d_s*1000){
                             mClusterManager.addItem(p);
                             mClusterManager.cluster();
                         }
