@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterManager;
@@ -323,10 +325,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        CameraUpdate center =    // imposto dove posizionare la vista iniziale
+        /*CameraUpdate center =    // imposto dove posizionare la vista iniziale
                 CameraUpdateFactory.newLatLng(new LatLng(seed_lat, seed_lng));
         mMap.moveCamera(center);
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));     // imposta lo zoom
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));     // imposta lo zoom*/
+
+        /////----------------------------------Zooming camera to position user-----------------
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null)
+        {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                    .zoom(15)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
 
         // Azioni fatte quando torno in MainActivity da un'altra activity
         Bundle extras = getIntent().getExtras();
@@ -357,8 +380,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata
 
 
-                    mClusterManager.addItem(new Place(android_id,newLat, newLng, message, "", rId)); // aggiungno nuovo marker al cluster
-                    mClusterManager.cluster(); // refresho il cluster
+                    //mClusterManager.addItem(new Place(android_id,newLat, newLng, message, "", rId)); // aggiungno nuovo marker al cluster
+                    //mClusterManager.cluster(); // refresho il cluster
 
                     CameraUpdate newLatLng =    // imposto la posizione della mappa
                             CameraUpdateFactory.newLatLng(new LatLng(newLat, newLng));
