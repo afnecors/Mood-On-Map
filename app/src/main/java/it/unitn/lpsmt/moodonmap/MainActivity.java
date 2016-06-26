@@ -356,8 +356,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //BitmapDescriptor selectedIcon = resizeMarker(rId, 100, 100); // chiamo il metodo per ridimensionare il nuovo marker
                     //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata
 
-
-                    mClusterManager.addItem(new Place(android_id,newLat, newLng, message, "", rId)); // aggiungno nuovo marker al cluster
                     mClusterManager.cluster(); // refresho il cluster
 
                     CameraUpdate newLatLng =    // imposto la posizione della mappa
