@@ -136,6 +136,7 @@ public class SettingActivity extends AppCompatActivity {
 
         //480x800 da 2
         //540x960 da 3
+        //1440x2560 da 4
         int k=2;
         //Determine screen size
         /*if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
@@ -162,6 +163,9 @@ public class SettingActivity extends AppCompatActivity {
         if(height>880){
             k=3;
             Toast.makeText(this, "Normal sized screen", Toast.LENGTH_LONG).show();
+        }else if(height>1760){
+            k=4;
+            Toast.makeText(this, "Large screen", Toast.LENGTH_LONG).show();
         }
 
         int totalHeight = 0;
