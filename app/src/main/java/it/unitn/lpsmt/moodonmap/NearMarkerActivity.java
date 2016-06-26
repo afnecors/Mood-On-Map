@@ -102,7 +102,15 @@ public class NearMarkerActivity extends AppCompatActivity {
 
                 // cicla la lista di oggetti json
                 // voglio soli i primi 10 altrimenti response.length()
-                for (int i = 0; i < 10; i++) {
+
+                int max;
+                if (response.length() < 10) {
+                    max = response.length();
+                } else {
+                    max = 10;
+                }
+
+                for (int i = 0; i < max; i++) {
                     try {
                         jo = response.getJSONObject(i); // ritorna un singolo oggetto json
                     } catch (JSONException e) {
