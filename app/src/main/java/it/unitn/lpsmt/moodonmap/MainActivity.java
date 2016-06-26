@@ -351,6 +351,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
 
+
+
         // Azioni fatte quando torno in MainActivity da un'altra activity
         Bundle extras = getIntent().getExtras();
 
