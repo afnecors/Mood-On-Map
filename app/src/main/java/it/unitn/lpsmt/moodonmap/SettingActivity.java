@@ -132,7 +132,7 @@ public class SettingActivity extends AppCompatActivity {
             return;
         }
         int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
+        for (int i = 0; i < 3; i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
