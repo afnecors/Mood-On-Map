@@ -204,6 +204,7 @@ public class Place implements ClusterItem {
         return "";
     }
 
+
     @Override
     public String toString() {
         String json = "{";
