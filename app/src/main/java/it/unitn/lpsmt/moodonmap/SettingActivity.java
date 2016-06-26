@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -62,7 +63,7 @@ public class SettingActivity extends AppCompatActivity {
         final ListSettingAdapter myAdapter = new ListSettingAdapter(this, prgmNameList, prgmImages);
         lv.setAdapter(myAdapter);
 
-
+        setListViewHeightBasedOnChildren(lv);
 
         current= (TextView) findViewById(R.id.curentValue);
         range = (SeekBar) findViewById(R.id.seekbar);
@@ -124,5 +125,22 @@ public class SettingActivity extends AppCompatActivity {
 
      }
 
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListSettingAdapter listAdapter =(ListSettingAdapter) listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
 
 }

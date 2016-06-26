@@ -38,14 +38,19 @@
             android:paddingRight="16dp"
             android:paddingLeft="16dp"
             android:layout_below="@+id/apptoolbar"/>
-
+    <LinearLayout
+        android:id="@+id/ln"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/textView1">
         <ListView
             android:id="@+id/listView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
             android:focusable="false">
         </ListView>
+
+    </LinearLayout>
 
         <TextView
             android:id="@+id/range"
@@ -54,7 +59,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="Range in Km"
-            android:layout_below="@+id/listView"
+            android:layout_below="@+id/ln"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:paddingRight="16dp"
