@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -132,9 +133,12 @@ public class SettingActivity extends AppCompatActivity {
             // pre-condition
             return;
         }
+
+        //480x800 da 2
+        //540x960 da 3
         int k=2;
         //Determine screen size
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+        /*if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
             k=4;
             Toast.makeText(this, "Large screen", Toast.LENGTH_LONG).show();
         }
@@ -148,7 +152,18 @@ public class SettingActivity extends AppCompatActivity {
         }
         else {
             Toast.makeText(this, "Screen size is neither large, normal or small", Toast.LENGTH_LONG).show();
+        }*/
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width=dm.widthPixels;
+        int height=dm.heightPixels;
+
+        if(height>880){
+            k=3;
+            Toast.makeText(this, "Normal sized screen", Toast.LENGTH_LONG).show();
         }
+
         int totalHeight = 0;
         for (int i = 0; i < k; i++) {
             View listItem = listAdapter.getView(i, null, listView);
