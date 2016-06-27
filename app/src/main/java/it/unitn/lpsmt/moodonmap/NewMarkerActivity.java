@@ -113,7 +113,6 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
             if (addresses.size() > 0) {// se il gps non è arrivato a prendere la posizione dell'utente, qui crasha
                 String locationDescr = addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getLocality();
                 city.setText(locationDescr);
-                //city.setText(addresses.get(0).getLocality());
             }
         }
 
@@ -132,8 +131,6 @@ public class NewMarkerActivity extends AppCompatActivity implements View.OnClick
                     final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
                     newPlace = new Place(android_id, lat, lng, message.getText().toString(), "snippet",  rId);
-
-                    //String body = new GsonBuilder().create().toJson(p);
 
                     // Invia il marker per il salvataggio sul server
                     sendData(newPlace);

@@ -224,7 +224,6 @@ public class MyMarkerActivity extends AppCompatActivity {
                     1);
 
             rlpLine.addRule(RelativeLayout.BELOW, emojiArray[i].getId());
-            //rlpLine.addRule(RelativeLayout.CENTER_HORIZONTAL);
             rlpLine.setMargins(70, 5, 0, 0);
             line[i].setBackgroundColor(Color.parseColor("#B3B3B3"));
 

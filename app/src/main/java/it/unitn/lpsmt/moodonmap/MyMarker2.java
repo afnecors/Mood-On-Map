@@ -127,11 +127,8 @@ public class MyMarker2 extends AppCompatActivity {
                         intent.putExtra("activity_id", "NearMarker");   // al titorno alla Main fa la stessa cosa di Near
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-
-                        //Toast.makeText(getBaseContext(), listViewMessage.get(position),Toast.LENGTH_SHORT).show();
                     }
                 });
-
 
                 // LongClick Listener
                 androidListView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -175,6 +172,4 @@ public class MyMarker2 extends AppCompatActivity {
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
-
 }
-

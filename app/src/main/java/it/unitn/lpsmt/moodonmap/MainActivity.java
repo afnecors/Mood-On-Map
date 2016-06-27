@@ -97,12 +97,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        String bored_name = this.getResources().getResourceEntryName(R.drawable.bored);
-//        Toast.makeText(MainActivity.this, "bored: "+bored_name, Toast.LENGTH_LONG).show();
-//        int bored_id = this.getResources().getIdentifier("bored", "drawable", this.getPackageName());
-//        //Toast.makeText(MainActivity.this, "bored: "+bored_id, Toast.LENGTH_LONG).show();
-
-
         // Verifico che il gps sia acceso
         final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
@@ -167,17 +161,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //intent.putExtra("numberOfMarkers", lat.size()); // il numero di markers sulla mappa
                 intent.putExtra("android_id", android_id);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                // Invece di passare tutti i marker passo ogni singoli oggetti che li compongono
-                // perchè è più facile, anche se più lungo
-                // Il controllo per vedere se il marker ha l'id del mio device è nell'activity chiamata
-//                for (int i = 0; i < lat.size(); i++) {
-//                        intent.putExtra("usersLat" + i, lat.get(i));    // tutte le lat e lng dei marker sulla mappa
-//                        intent.putExtra("usersLng" + i, lng.get(i));
-//                        intent.putExtra("usersMsg" + i, title.get(i));  // i messaggi sulla mappa
-//                        intent.putExtra("usersEmoji" + i, icon.get(i)); // gli id delle emoji
-//                        intent.putExtra("usersId_device" + i, id_device.get(i));
-//                }
 
                 startActivity(intent);
             }
@@ -265,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        mMap.setMyLocationEnabled(true);    // altri permessi della posizione, uno dei due sarà inutile?
+        mMap.setMyLocationEnabled(true);
         
 
         /****************************/
@@ -275,36 +258,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         mMap.setOnCameraChangeListener(mClusterManager);
-
-        // Add cluster items (markers) to the cluster manager.
-//        for (int i = 0; i < 20; i++) {
-//            title.add("messaggio " + i);    // titolo dei marker (AKA: messaggio)
-//            snippet.add("snippet");     // chissà se sto snippet un giorno lo useremo...
-//
-//            // per sparpagliare un po' le emoji
-//            if (i < 7) {
-//                icon.add(R.drawable.sad);   // aggiungo l'id dell'emoji all'arraylist
-//            } else if (i >= 7 && i < 14) {
-//                icon.add(R.drawable.lol);
-//            } else {
-//                icon.add(R.drawable.bored);
-//            }
-//
-//            user.add(new LatLng(lat.get(i), lng.get(i)));   // aggiungo un oggetto LatLng alla lista
-//
-//            mClusterManager.addItem(    // aggiungo tutti i marker generati al cluster manager
-//                    new Place(
-//                            "",
-//                            user.get(i).latitude,
-//                            user.get(i).longitude,
-//                            title.get(i),
-//                            snippet.get(i),
-//                            icon.get(i)   // dall'id dell'emoji genero un oggetto BitmapDescriptor
-//                    )
-//            );
-//            mClusterManager.cluster(); // refresho il cluster
-//        }
-
 
         /***********************************************************/
         /*  Aprire nuova activity quando si clicca su un marker    */
@@ -325,11 +278,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        /*CameraUpdate center =    // imposto dove posizionare la vista iniziale
-                CameraUpdateFactory.newLatLng(new LatLng(seed_lat, seed_lng));
-        mMap.moveCamera(center);
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));     // imposta lo zoom*/
-
         /////----------------------------------Zooming camera to position user-----------------
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -348,10 +296,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .tilt(40)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
         }
-
-
 
         // Azioni fatte quando torno in MainActivity da un'altra activity
         Bundle extras = getIntent().getExtras();
@@ -374,16 +319,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-//            message += " android_id:" + android_id;
 
             switch (activity) {     // guardo da quale activity vengo
                 case "NewMarker":
-                    //BitmapDescriptor selectedIcon = resizeMarker(rId, 100, 100); // chiamo il metodo per ridimensionare il nuovo marker
-                    //BitmapDescriptor selectedIcon = BitmapDescriptorFactory.fromResource(rId); // metto il marker con l'emoji selezionata
-
-
-                    //mClusterManager.addItem(new Place(android_id,newLat, newLng, message, "", rId)); // aggiungno nuovo marker al cluster
-                    //mClusterManager.cluster(); // refresho il cluster
 
                     CameraUpdate newLatLng =    // imposto la posizione della mappa
                             CameraUpdateFactory.newLatLng(new LatLng(newLat, newLng));
@@ -409,7 +347,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     break;
 
                 case "setting":
-                    //Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_LONG).show();
                     int id_e = 0;
 
                     if(pos==0){
@@ -584,7 +521,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String url = "http://afnecors.altervista.org/android2016/api.php/markers";
 
         switch (id_emo_setting) {
-
             case R.drawable.bored:
                 url += "?id_emo=" + this.getResources().getResourceEntryName(R.drawable.bored);
                 break;
@@ -676,8 +612,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     p.forceImageFromIdEmo(MainActivity.this); // aggiunge l'immagine
                     p.forcePosition(); // aggiunge la posizione
 
-                    //Toast.makeText(MainActivity.this, p.toString(), Toast.LENGTH_SHORT).show();
-
                     // aggiungo cose alle arraylist, mi serve per passare le singole cose alle altre activity
                     title.add(p.getMessage());
                     lat.add(p.getLatitude());
@@ -688,7 +622,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (d_s == 0) {
                         mClusterManager.addItem(p);
                         mClusterManager.cluster();
-                        //Toast.makeText(getApplicationContext(),"ciao"+d_s, Toast.LENGTH_SHORT).show();
 
                     } else {
                         markerLocation[i] = new Location("");

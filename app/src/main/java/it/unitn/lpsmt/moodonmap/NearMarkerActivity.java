@@ -128,7 +128,6 @@ public class NearMarkerActivity extends AppCompatActivity {
                     usersLocation.add(new Location(""));
                     usersLocation.get(i).setLatitude(usersLat.get(i));
                     usersLocation.get(i).setLongitude(usersLng.get(i));
-                    //distance.add(myLocation.distanceTo(usersLocation.get(i))); // calcola la distanza tra myLocation e usersLocation[i] e la mette in distance
 
                     DecimalFormat df = new DecimalFormat(); // cose per i km e metri e arrotondamenti
 
@@ -169,10 +168,7 @@ public class NearMarkerActivity extends AppCompatActivity {
                     listViewImage.add(imgID);
                     listViewMessage.add(message);
                     listViewAddress.add(address + " – " + distance.get(i) + " " + unit);
-                    //listViewDistance.add(distance.get(i));
                 }
-
-                //Collections.sort(listViewDistance); // ordino la lista secondo le distanze
 
                 // Preparo la listview
                 for (int i = 0; i < listViewMessage.size(); i++) {
@@ -180,7 +176,6 @@ public class NearMarkerActivity extends AppCompatActivity {
                     hm.put("listview_message", listViewMessage.get(i));
                     hm.put("listview_image", "" + listViewImage.get(i));
                     hm.put("listview_address", "" + listViewAddress.get(i));
-                    //hm.put("listview_distance", "" + listViewDistance.get(i));
                     aList.add(hm);
                 }
 
@@ -202,8 +197,6 @@ public class NearMarkerActivity extends AppCompatActivity {
                         intent.putExtra("activity_id", "NearMarker");   // al titorno alla Main fa la stessa cosa di Near
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-
-                        //Toast.makeText(getBaseContext(), listViewMessage.get(position),Toast.LENGTH_SHORT).show();
                     }
                 });
 

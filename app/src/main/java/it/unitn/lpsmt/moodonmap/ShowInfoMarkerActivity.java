@@ -48,9 +48,6 @@ public class ShowInfoMarkerActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     // Toolbar nella schermata principale
-  //      setSupportActionBar(toolbar);
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             myLat = extras.getDouble("myLat");
@@ -94,7 +91,6 @@ public class ShowInfoMarkerActivity extends AppCompatActivity {
                         int id_emo = getResources().getIdentifier(p.getId_emo(), "drawable", getPackageName());
                         iw_emoji.setImageResource(id_emo);
 
-                        //tw_message.append(jo.getString("message"));
                         tw_message.append(p.getMessage());
 
                         tw_address.append(p.getAddress(ShowInfoMarkerActivity.this));
