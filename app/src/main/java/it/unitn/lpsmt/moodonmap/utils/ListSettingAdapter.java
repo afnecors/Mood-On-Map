@@ -71,18 +71,6 @@ public class ListSettingAdapter extends BaseAdapter {
 
         holder.radioBtn.setClickable(false);
 
-//        holder.radioBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (position != mSelectedPosition && mSelectedRB != null) {
-//                    mSelectedRB.setChecked(false);
-//                }
-//
-//                mSelectedPosition = position;
-//                mSelectedRB = (RadioButton) v;
-//            }
-//        });
-
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

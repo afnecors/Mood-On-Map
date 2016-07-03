@@ -54,12 +54,6 @@ public class Place implements ClusterItem {
     }
 
     public void forceImageFromIdEmo(Context ctx) {
-        //String bored_name = this.getResources().getResourceName(R.drawable.bored);
-        //Toast.makeText(MainActivity.this, "bored: "+bored, Toast.LENGTH_LONG).show();
-        //int bored_id = this.getResources().getIdentifier("bored", "drawable", this.getPackageName());
-        //Toast.makeText(MainActivity.this, "bored: "+bored_id, Toast.LENGTH_LONG).show();
-
-
         /*
          * Questo è necessario per prevenire immagini casuali nel caso in cui nel DB fossero
          * salvati degli identificatori di emoji non più riconosciuti.

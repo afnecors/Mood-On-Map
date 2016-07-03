@@ -34,9 +34,8 @@ public class SettingActivity extends AppCompatActivity {
     int pos;
     int progressChanged;
 
-
-
     ArrayList prgmName;
+
     public static int [] prgmImages = {
             R.drawable.bored,
             R.drawable.lol,
@@ -76,7 +75,6 @@ public class SettingActivity extends AppCompatActivity {
         progressChanged=0;
         range.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChanged = progress;
@@ -102,13 +100,6 @@ public class SettingActivity extends AppCompatActivity {
         minValue.setText(String.valueOf(min));
         maxValue.setText(String.valueOf(max));
 
-//        lv.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                pos = position;
-//            }
-//        });
-
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +109,6 @@ public class SettingActivity extends AppCompatActivity {
                 intent.putExtra("range", progressChanged);
                 intent.putExtra("position",pos);//pos 0: bored pos 1: lol pos 2: sad
                 intent.putExtra("activity_id", "setting");
-                //Toast.makeText(context, "You Selected "+pos, Toast.LENGTH_LONG).show();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
@@ -139,21 +129,6 @@ public class SettingActivity extends AppCompatActivity {
         //1440x2560 da 4
         int k=2;
         //Determine screen size
-        /*if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
-            k=4;
-            Toast.makeText(this, "Large screen", Toast.LENGTH_LONG).show();
-        }
-        else if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
-            k=3;
-            Toast.makeText(this, "Normal sized screen", Toast.LENGTH_LONG).show();
-        }
-        else if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_SMALL) {
-            k=2;
-            Toast.makeText(this, "Small sized screen", Toast.LENGTH_LONG).show();
-        }
-        else {
-            Toast.makeText(this, "Screen size is neither large, normal or small", Toast.LENGTH_LONG).show();
-        }*/
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
