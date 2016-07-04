@@ -138,12 +138,8 @@ public class NearMarkerActivity extends AppCompatActivity {
                     // cicla la lista di oggetti json
                     // voglio soli i primi 10 altrimenti response.length()
 
-                    int max;
-                    if (response.length() < 10) {
-                        max = response.length();
-                    } else {
-                        max = 10;
-                    }
+
+                    int max = response.length();
 
                     for (int i = 0; i < max; i++) {
                         try {
@@ -167,44 +163,48 @@ public class NearMarkerActivity extends AppCompatActivity {
 
                         DecimalFormat df = new DecimalFormat(); // cose per i km e metri e arrotondamenti
 
-                        if(myLocation.distanceTo(usersLocation.get(i)) > 1000){
-                            df.setMaximumFractionDigits(2);
-                            distance.add(df.format(myLocation.distanceTo(usersLocation.get(i)) / 1000));
-                            unit = "Km";
-                        }
-                        else{
-                            df.setMaximumFractionDigits(0);
-                            distance.add(df.format(myLocation.distanceTo(usersLocation.get(i))));
-                            unit = "Metri";
-                        }
+                        double dist = myLocation.distanceTo(usersLocation.get(i));
 
-                        Log.wtf("Distanza", i + " - " + distance.get(i).toString());
+                        if (dist <= 50000) {
+                            if(dist > 1000){
+                                df.setMaximumFractionDigits(2);
+                                distance.add(df.format(myLocation.distanceTo(usersLocation.get(i)) / 1000));
+                                unit = "Km";
+                            }
+                            else{
+                                df.setMaximumFractionDigits(0);
+                                distance.add(df.format(myLocation.distanceTo(usersLocation.get(i))));
+                                unit = "Metri";
+                            }
 
-                        // gestione dell'indirizzo, tipo se è troppo lungo lo taglio
-                        String address;
-                        if(p.getAddress(NearMarkerActivity.this).length() > 27) {
-                            address = p.getAddress(NearMarkerActivity.this).substring(0, 27);
-                            address = address.concat("...");
-                        }
-                        else{
-                            address = p.getAddress(NearMarkerActivity.this);
-                        }
+                            Log.wtf("Distanza", i + " - " + distance.get(i).toString());
 
-                        // gestione del messaggio, tipo se è troppo lungo lo taglio
-                        String message;
-                        if(p.getMessage().length() > 28) {
-                            message = p.getMessage().substring(0, 28);
-                            message = message.concat("...");
-                        }
-                        else{
-                            message = p.getMessage();
-                        }
+                            // gestione dell'indirizzo, tipo se è troppo lungo lo taglio
+                            String address;
+                            if(p.getAddress(NearMarkerActivity.this).length() > 27) {
+                                address = p.getAddress(NearMarkerActivity.this).substring(0, 27);
+                                address = address.concat("...");
+                            }
+                            else{
+                                address = p.getAddress(NearMarkerActivity.this);
+                            }
 
-                        int imgID = getResources().getIdentifier(p.getId_emo(), "drawable", getPackageName());
-                        listViewImage.add(imgID);
-                        listViewMessage.add(message);
-                        listViewAddress.add(address + " – " + distance.get(i) + " " + unit);
-                        //listViewDistance.add(distance.get(i));
+                            // gestione del messaggio, tipo se è troppo lungo lo taglio
+                            String message;
+                            if(p.getMessage().length() > 28) {
+                                message = p.getMessage().substring(0, 28);
+                                message = message.concat("...");
+                            }
+                            else{
+                                message = p.getMessage();
+                            }
+
+                            int imgID = getResources().getIdentifier(p.getId_emo(), "drawable", getPackageName());
+                            listViewImage.add(imgID);
+                            listViewMessage.add(message);
+                            listViewAddress.add(address + " – " + distance.get(i) + " " + unit);
+                            //listViewDistance.add(distance.get(i));
+                        }
                     }
 
                     //Collections.sort(listViewDistance); // ordino la lista secondo le distanze
@@ -218,8 +218,6 @@ public class NearMarkerActivity extends AppCompatActivity {
                         //hm.put("listview_distance", "" + listViewDistance.get(i));
                         aList.add(hm);
                     }
-
-
 
 
                     // Click Listener
@@ -238,14 +236,6 @@ public class NearMarkerActivity extends AppCompatActivity {
                         }
                     });
 
-                    // LongClick Listener
-                    androidListView.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-
-                            return false;
-                        }
-                    });
                 }
 
                 @Override
